@@ -1,0 +1,12 @@
+Options -Indexes
+
+# Block direct access to all PHP files except through index.php
+<FilesMatch "\.php$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Allow index.php only
+<Files "index.php">
+    Allow from all
+</Files>

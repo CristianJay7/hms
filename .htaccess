@@ -1,0 +1,19 @@
+Options -Indexes
+RewriteEngine On
+RewriteBase /hms/
+
+# Skip real files and folders
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Remove .php extension
+# /services → /services.php
+RewriteRule ^([^/]+)$ $1.php [L]
+
+# Handle ?id= style URLs
+# /services/1 → /services-details.php?id=1
+RewriteRule ^services-details/([0-9]+)$   services-details.php?id=$1 [L,QSA]
+RewriteRule ^facility-details/([0-9]+)$   facility-details.php?id=$1 [L,QSA]
+RewriteRule ^room/([0-9]+)$       room-details.php?id=$1 [L,QSA]
+RewriteRule ^update/([0-9]+)$       update-details.php?id=$1 [L,QSA]
+RewriteRule ^blogs/([0-9]+)$      blogs.php?page=$1 [L,QSA]
