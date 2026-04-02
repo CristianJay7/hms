@@ -1,1 +1,1 @@
-echo "HTACCESS WORKING";
+echo "HTACCESS WORKING fine";
