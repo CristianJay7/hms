@@ -21,6 +21,7 @@ while ($row = mysqli_fetch_assoc($result)) $rooms[] = $row;
     <input type="hidden" id="roomId">
     <input type="hidden" id="formAction" value="create">
     <input type="hidden" id="existingImage" value="">
+    <input type="hidden" id="removeImageFlag" value="0">
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
 
@@ -165,6 +166,7 @@ function removeImage() {
     document.getElementById('uploadPlaceholder').style.display = 'block';
     document.getElementById('removeImageBtn').style.display = 'none';
     document.getElementById('existingImage').value = '';
+    document.getElementById('removeImageFlag').value = '1';
 }
 
 function saveRoom() {
@@ -181,13 +183,14 @@ function saveRoom() {
     if (!name) { showToast('Room name is required.', false); return; }
 
     const fd = new FormData();
-    fd.append('action',       action);
-    fd.append('name',         name);
-    fd.append('price',        price);
-    fd.append('capacity',     capacity);
-    fd.append('description',  desc);
-    fd.append('amenities',    amenities);
+    fd.append('action',         action);
+    fd.append('name',           name);
+    fd.append('price',          price);
+    fd.append('capacity',       capacity);
+    fd.append('description',    desc);
+    fd.append('amenities',      amenities);
     fd.append('existing_image', existing);
+    fd.append('remove_image',   document.getElementById('removeImageFlag').value);
     if (id) fd.append('id', id);
     if (imgFile) fd.append('image', imgFile);
 
@@ -289,6 +292,7 @@ function resetForm() {
     document.getElementById('roomAmenities').value      = '';
     document.getElementById('formAction').value         = 'create';
     document.getElementById('existingImage').value      = '';
+    document.getElementById('removeImageFlag').value    = '0';
     document.getElementById('formTitle').textContent    = '➕ Add New Room';
     document.getElementById('cancelBtn').style.display  = 'none';
     removeImage();

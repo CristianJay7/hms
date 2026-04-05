@@ -296,7 +296,7 @@ function reloadTable() {
                 <tr id="row-${b.id}" style="border-bottom:1px solid #eef1f5;">
                     <td style="padding:11px 14px;font-size:0.85rem;color:#aaa;">${b.id}</td>
                     <td style="padding:11px 14px;">
-                        <img src="../${esc(b.image || '/hms/admin/images/default.jpg')}"
+                        <img src="${esc(b.image || '/hms/admin/images/default.jpg')}"
                             style="width:70px;height:48px;object-fit:cover;border-radius:6px;"
                             onerror="this.onerror=null;this.src='/hms/admin/images/default.jpg'">
                     </td>

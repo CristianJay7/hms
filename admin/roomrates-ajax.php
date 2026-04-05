@@ -74,10 +74,30 @@ switch ($action) {
         $desc      = mysqli_real_escape_string($con, trim($_POST['description'] ?? ''));
         $amenities = mysqli_real_escape_string($con, trim($_POST['amenities'] ?? ''));
 
+        $existing_image = trim($_POST['existing_image'] ?? '');
+        $remove_image   = ($_POST['remove_image'] ?? '0') === '1';
         $image_sql = '';
+
         if (!empty($_FILES['image']['name'])) {
+            // New image uploaded — delete old file first, then save new one
             $uploaded = upload_image($_FILES['image'], $upload_dir);
-            if ($uploaded) $image_sql = ", image='$uploaded'";
+            if ($uploaded) {
+                if (!empty($existing_image)) {
+                    $old_abs = $_SERVER['DOCUMENT_ROOT'] . $existing_image;
+                    if (file_exists($old_abs)) unlink($old_abs);
+                }
+                $esc_img   = mysqli_real_escape_string($con, $uploaded);
+                $image_sql = ", image='$esc_img'";
+            }
+        } elseif ($remove_image) {
+            // "Remove image" button was explicitly clicked — clear DB and delete file
+            $res_old = mysqli_query($con, "SELECT image FROM roomrates WHERE id=$id");
+            $row_old = mysqli_fetch_assoc($res_old);
+            if (!empty($row_old['image'])) {
+                $old_abs = $_SERVER['DOCUMENT_ROOT'] . $row_old['image'];
+                if (file_exists($old_abs)) unlink($old_abs);
+            }
+            $image_sql = ", image=''";
         }
 
         if (empty($name) || !$id) {

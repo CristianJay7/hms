@@ -65,10 +65,29 @@ switch ($action) {
 
         if (!$id || !$title) { echo json_encode(['success' => false, 'message' => 'Invalid data.']); break; }
 
+        $existing_image = trim($_POST['existing_image'] ?? '');
         $image_sql = '';
+
         if (!empty($_FILES['image']['name'])) {
+            // New image uploaded — delete old file first
             $uploaded = upload_image($_FILES['image'], $upload_dir);
-            if ($uploaded) $image_sql = ", image='$uploaded'";
+            if ($uploaded) {
+                if (!empty($existing_image)) {
+                    $old_abs = $_SERVER['DOCUMENT_ROOT'] . $existing_image;
+                    if (file_exists($old_abs)) unlink($old_abs);
+                }
+                $esc_uploaded = mysqli_real_escape_string($con, $uploaded);
+                $image_sql = ", image='$esc_uploaded'";
+            }
+        } elseif ($existing_image === '') {
+            // "Remove image" was clicked — clear image in DB
+            $res_old = mysqli_query($con, "SELECT image FROM blogs WHERE id=$id");
+            $row_old = mysqli_fetch_assoc($res_old);
+            if (!empty($row_old['image'])) {
+                $old_abs = $_SERVER['DOCUMENT_ROOT'] . $row_old['image'];
+                if (file_exists($old_abs)) unlink($old_abs);
+            }
+            $image_sql = ", image=''";
         }
 
         $sql = "UPDATE blogs SET
