@@ -1,6 +1,10 @@
 <?php
 include 'includes/config.php';
 include 'includes/info.php';
+ 
+$sections_res = mysqli_query($con, "SELECT * FROM terms_sections ORDER BY sort_order ASC");
+$sections     = [];
+while ($row = mysqli_fetch_assoc($sections_res)) $sections[] = $row;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,41 +23,28 @@ include 'includes/info.php';
 
 <div class="legal-page">
     <div class="legal-hero">
-        <div class="legal-hero-icon" style="margin-top: 20px;"><i class="fas fa-file-contract"></i></div>
+        <div class="legal-hero-icon"><i class="fas fa-file-contract"></i></div>
         <h1><?= info('terms_title', 'Terms & Conditions') ?></h1>
-        <p>Last updated: <?= date('F d, Y', strtotime(info('terms_updated', '2024-01-01'))) ?></p>
+        <p>Last updated: <?= date('F d, Y', strtotime(info('terms_updated', date('Y-m-d')))) ?></p>
     </div>
-
+ 
     <div class="legal-container">
         <div class="legal-card">
-            <div class="legal-section">
-                <div class="legal-icon"><i class="fas fa-info-circle"></i></div>
-                <div class="legal-content">
-                    <h2>Introduction</h2>
-                    <p><?= info('terms_intro') ?></p>
+            <?php if (empty($sections)): ?>
+                <p style="text-align:center;color:#aaa;padding:40px 0;">No content yet.</p>
+            <?php else: ?>
+                <?php foreach ($sections as $s): ?>
+                <div class="legal-section">
+                    <div class="legal-icon">
+                        <i class="<?= htmlspecialchars($s['icon'] ?? 'fa-solid fa-circle-info') ?>"></i>
+                    </div>
+                    <div class="legal-content">
+                        <h2><?= htmlspecialchars($s['title']) ?></h2>
+                        <p><?= htmlspecialchars($s['content']) ?></p>
+                    </div>
                 </div>
-            </div>
-            <div class="legal-section">
-                <div class="legal-icon"><i class="fas fa-hospital"></i></div>
-                <div class="legal-content">
-                    <h2>Services</h2>
-                    <p><?= info('terms_services') ?></p>
-                </div>
-            </div>
-            <div class="legal-section">
-                <div class="legal-icon"><i class="fas fa-scale-balanced"></i></div>
-                <div class="legal-content">
-                    <h2>Liability</h2>
-                    <p><?= info('terms_liability') ?></p>
-                </div>
-            </div>
-            <div class="legal-section">
-                <div class="legal-icon"><i class="fas fa-credit-card"></i></div>
-                <div class="legal-content">
-                    <h2>Payment</h2>
-                    <p><?= info('terms_payment') ?></p>
-                </div>
-            </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 </div>

@@ -534,7 +534,7 @@ function renderTable({ doctors, page, perPage }) {
             <td class="td-name" data-label="Doctor">${esc(d.name)}</td>
             <td data-label="Specialization"><span class="spec-pill">${esc(d.specialization)}</span></td>
             <td data-label="Clinic Hours">🕐 ${esc(d.clinic_hours)}</td>
-            <td data-label="Availability"><span class="avail-badge ${badge}">${esc(d.availability)}</span></td>
+            <td data-label="Information"><span class="avail-badge ${badge}">${esc(d.availability)}</span></td>
         </tr>`;
     }).join('');
 }

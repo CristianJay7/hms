@@ -245,9 +245,9 @@ html, body {
     <!-- Main Content -->
     <div class="details-main">
         <img class="details-img"
-             src="<?= !empty($room['image']) ? htmlspecialchars($room['image']) : '/hms/admin/images/default.jpg' ?>"
+             src="../<?= !empty($room['image']) ? htmlspecialchars($room['image']) : '/hms/images/default.jpg' ?>"
              alt="<?= htmlspecialchars($room['name']) ?>"
-             onerror="this.onerror=null; this.src='/hmsadmin/images/default.jpg'">
+             onerror="this.onerror=null; this.src='/hms/images/default.jpg'">
 
         <span class="details-badge"><i class="fas fa-bed"></i> Room Type</span>
         <h1><?= htmlspecialchars($room['name']) ?></h1>

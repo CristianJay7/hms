@@ -323,7 +323,7 @@ body { background:#f5f6f8; color:#333; }
         <div class="mv-card">
         <div class="icon"><i class="fas fa-heart"></i></div>
             <h3>Our Mission</h3>
-            <p style="text-align: justify; hyphens: auto; text-transform: none;">
+            <p style="text-align: justify; hyphens: auto; white-space: pre-line; text-transform: none;">
             <?= $about_mission ?>
             </p>
         </div>

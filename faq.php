@@ -41,7 +41,7 @@ while ($row = mysqli_fetch_assoc($faqs_res)) $faqs[] = $row;
 }
 
 .faq-question h3 {
-    font-size: 1rem;
+    font-size: 1.7rem;
     font-weight: 700;
     color: #1a3c5e;
     margin: 0;
@@ -55,7 +55,7 @@ while ($row = mysqli_fetch_assoc($faqs_res)) $faqs[] = $row;
     background: #e8f9f9;
     display: flex; align-items: center; justify-content: center;
     color: #00b6bd;
-    font-size: 0.85rem;
+    font-size: 1rem;
     flex-shrink: 0;
     transition: transform 0.3s ease, background 0.2s;
 }
@@ -79,7 +79,7 @@ while ($row = mysqli_fetch_assoc($faqs_res)) $faqs[] = $row;
 }
 
 .faq-answer p {
-    font-size: 0.92rem;
+    font-size: 1.4rem;
     color: #666;
     line-height: 1.8;
     border-top: 1px solid #eef1f5;
@@ -103,8 +103,8 @@ while ($row = mysqli_fetch_assoc($faqs_res)) $faqs[] = $row;
     margin-top: 40px;
     color: #fff;
 }
-.faq-contact-box h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
-.faq-contact-box p  { font-size: 0.92rem; opacity: 0.85; margin-bottom: 20px; }
+.faq-contact-box h3 { font-size: 1.7rem; font-weight: 700; margin-bottom: 8px; }
+.faq-contact-box p  { font-size: 1.4rem; opacity: 0.85; margin-bottom: 20px; }
 .faq-contact-btn {
     display: inline-flex;
     align-items: center;
@@ -123,11 +123,11 @@ while ($row = mysqli_fetch_assoc($faqs_res)) $faqs[] = $row;
 </head>
 <body>
 <?php include 'includes/header.php'; ?>
-<br><br><br><br><br><br>
+
 
 <div class="legal-page">
     <div class="legal-hero">
-        <div class="legal-hero-icon"><i class="fas fa-circle-question"></i></div>
+        <div class="legal-hero-icon"style="margin-top: 20px;"><i class="fas fa-circle-question"></i></div>
         <h1>Frequently Asked Questions</h1>
         <p>Find answers to common questions about our hospital, services, and policies.</p>
     </div>
@@ -158,7 +158,7 @@ while ($row = mysqli_fetch_assoc($faqs_res)) $faqs[] = $row;
             <div class="faq-contact-box">
                 <h3>Still have questions?</h3>
                 <p>Can't find what you're looking for? Our team is happy to help you.</p>
-                <a href="contact.php" class="faq-contact-btn">
+                <a href="/hms/contact" class="faq-contact-btn">
                     <i class="fas fa-headset"></i> Contact Us
                 </a>
             </div>

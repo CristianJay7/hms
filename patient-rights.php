@@ -1,6 +1,10 @@
 <?php
 include 'includes/config.php';
 include 'includes/info.php';
+ 
+$rights_res = mysqli_query($con, "SELECT * FROM patient_rights ORDER BY sort_order ASC");
+$rights     = [];
+while ($row = mysqli_fetch_assoc($rights_res)) $rights[] = $row;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,43 +23,29 @@ include 'includes/info.php';
 
 <div class="legal-page">
     <div class="legal-hero">
-        <div class="legal-hero-icon" style="margin-top: 20px;"><i class="fas fa-hand-holding-heart"></i></div>
+        <div class="legal-hero-icon"><i class="fas fa-hand-holding-heart"></i></div>
         <h1><?= info('rights_title', 'Patient Rights & Responsibilities') ?></h1>
         <p><?= info('rights_intro') ?></p>
     </div>
-
+ 
     <div class="legal-container">
-
+ 
         <h2 style="text-align:center;color:#1a3c5e;font-size:1.6rem;margin-bottom:28px;font-weight:700;">Your Rights</h2>
-
+ 
+        <?php if (empty($rights)): ?>
+            <p style="text-align:center;color:#aaa;padding:40px 0;">No rights listed yet.</p>
+        <?php else: ?>
         <div class="rights-grid">
+            <?php foreach ($rights as $i => $r): ?>
             <div class="rights-card">
-                <div class="rights-num">01</div>
-                <h3><?= info('rights_r1_title') ?></h3>
-                <p><?= info('rights_r1_desc') ?></p>
+                <div class="rights-num"><?= str_pad($i + 1, 2, '0', STR_PAD_LEFT) ?></div>
+                <h3><?= htmlspecialchars($r['title']) ?></h3>
+                <p><?= htmlspecialchars($r['description']) ?></p>
             </div>
-            <div class="rights-card">
-                <div class="rights-num">02</div>
-                <h3><?= info('rights_r2_title') ?></h3>
-                <p><?= info('rights_r2_desc') ?></p>
-            </div>
-            <div class="rights-card">
-                <div class="rights-num">03</div>
-                <h3><?= info('rights_r3_title') ?></h3>
-                <p><?= info('rights_r3_desc') ?></p>
-            </div>
-            <div class="rights-card">
-                <div class="rights-num">04</div>
-                <h3><?= info('rights_r4_title') ?></h3>
-                <p><?= info('rights_r4_desc') ?></p>
-            </div>
-            <div class="rights-card">
-                <div class="rights-num">05</div>
-                <h3><?= info('rights_r5_title') ?></h3>
-                <p><?= info('rights_r5_desc') ?></p>
-            </div>
+            <?php endforeach; ?>
         </div>
-
+        <?php endif; ?>
+ 
         <div class="legal-card" style="margin-top:32px;">
             <div class="legal-section">
                 <div class="legal-icon"><i class="fas fa-user-check"></i></div>
@@ -65,6 +55,7 @@ include 'includes/info.php';
                 </div>
             </div>
         </div>
+ 
     </div>
 </div>
 

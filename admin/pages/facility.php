@@ -34,7 +34,7 @@ define('FAC_DEFAULT', '/hms/admin/images/default.jpg');
         </div>
 
         <div>
-            <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">Image</label>
+            <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">Cover Image</label>
             <div id="uploadArea" onclick="document.getElementById('imageInput').click()"
                 style="border:2px dashed #dde3ea;border-radius:6px;padding:14px;text-align:center;cursor:pointer;background:#fafbfc;">
                 <div id="uploadPlaceholder">
@@ -57,6 +57,24 @@ define('FAC_DEFAULT', '/hms/admin/images/default.jpg');
             <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">Description</label>
             <textarea id="description" placeholder="Brief description of this facility..."
                 style="width:100%;padding:9px 12px;border:1px solid #dde3ea;border-radius:6px;font-size:0.9rem;font-family:inherit;resize:vertical;min-height:80px;outline:none;"></textarea>
+        </div>
+
+        <div style="grid-column:1/-1;">
+            <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">
+                Services Offered
+                <span style="color:#aaa;font-weight:400;">(one per line — each becomes a checklist item)</span>
+            </label>
+            <textarea id="servicesOffered" rows="5" placeholder="24/7 Emergency Response&#10;Trauma Surgery&#10;Intensive Monitoring&#10;Ambulance Services"
+                style="width:100%;padding:9px 12px;border:1px solid #dde3ea;border-radius:6px;font-size:0.9rem;font-family:inherit;resize:vertical;outline:none;"></textarea>
+        </div>
+
+        <div style="grid-column:1/-1;">
+            <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">
+                Schedules
+                <span style="color:#aaa;font-weight:400;">(one per line, e.g. Monday - Friday: 8:00 AM - 5:00 PM)</span>
+            </label>
+            <textarea id="schedules" rows="4" placeholder="Monday - Friday: 8:00 AM - 5:00 PM&#10;Saturday: 8:00 AM - 12:00 PM&#10;Sunday: Closed"
+                style="width:100%;padding:9px 12px;border:1px solid #dde3ea;border-radius:6px;font-size:0.9rem;font-family:inherit;resize:vertical;outline:none;"></textarea>
         </div>
 
     </div>
@@ -98,7 +116,7 @@ define('FAC_DEFAULT', '/hms/admin/images/default.jpg');
         <?php if (empty($facilities)): ?>
             <tr><td colspan="5" style="padding:40px;text-align:center;color:#aaa;">No facilities yet. Add one above.</td></tr>
         <?php else: ?>
-            <?php foreach ($facilities as $i => $f):
+            <?php foreach ($facilities as $f):
                 $img = !empty($f['image']) ? $f['image'] : FAC_DEFAULT;
             ?>
             <tr id="row-<?= $f['id'] ?>" style="border-bottom:1px solid #eef1f5;">
@@ -127,9 +145,29 @@ define('FAC_DEFAULT', '/hms/admin/images/default.jpg');
 </table>
 </div>
 
+<!-- Photo Gallery Manager -->
+<div id="photoManager" style="display:none;margin-top:32px;">
+    <hr style="border:none;border-top:1px solid #eef1f5;margin-bottom:24px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <h4 style="font-size:1rem;color:#1a3c5e;">📷 Photo Gallery <span id="photoPostTitle" style="color:#00b6bd;"></span></h4>
+        <span id="photoCount" style="background:#e8f0f8;color:#1a3c5e;font-size:0.78rem;font-weight:700;padding:3px 12px;border-radius:20px;">0 Photos</span>
+    </div>
+    <div style="margin-bottom:20px;">
+        <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:8px;">Add Photos <span style="color:#aaa;font-weight:400;">(select multiple)</span></label>
+        <input type="file" id="galleryInput" accept="image/jpeg,image/png,image/webp" multiple
+            style="padding:8px;border:1px solid #dde3ea;border-radius:6px;width:100%;font-size:0.88rem;">
+        <button onclick="uploadPhotos()"
+            style="margin-top:10px;padding:9px 22px;background:#00b6bd;color:#fff;border:none;border-radius:6px;font-size:0.88rem;font-weight:600;cursor:pointer;">
+            Upload Photos
+        </button>
+    </div>
+    <div id="photoGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;"></div>
+</div>
+
 <script>
 const AJAX_URL    = '/hms/admin/facility-ajax.php';
 const DEFAULT_IMG = '/hms/admin/images/default.jpg';
+let currentFacilityId = null;
 
 function previewImage(input) {
     if (!input.files || !input.files[0]) return;
@@ -154,20 +192,24 @@ function removeImage() {
 }
 
 function saveFacility() {
-    const id            = document.getElementById('facilityId').value;
-    const action        = document.getElementById('formAction').value;
-    const name          = document.getElementById('name').value.trim();
-    const description   = document.getElementById('description').value.trim();
-    const existingImage = document.getElementById('existingImage').value;
-    const imageFile     = document.getElementById('imageInput').files[0];
+    const id              = document.getElementById('facilityId').value;
+    const action          = document.getElementById('formAction').value;
+    const name            = document.getElementById('name').value.trim();
+    const description     = document.getElementById('description').value.trim();
+    const servicesOffered = document.getElementById('servicesOffered').value.trim();
+    const schedules       = document.getElementById('schedules').value.trim();
+    const existingImage   = document.getElementById('existingImage').value;
+    const imageFile       = document.getElementById('imageInput').files[0];
 
     if (!name) { showToast('Facility name is required.', false); return; }
 
     const data = new FormData();
-    data.append('action', action);
-    data.append('name', name);
-    data.append('description', description);
-    data.append('existing_image', existingImage);
+    data.append('action',           action);
+    data.append('name',             name);
+    data.append('description',      description);
+    data.append('services_offered', servicesOffered);
+    data.append('schedules',        schedules);
+    data.append('existing_image',   existingImage);
     if (id) data.append('id', id);
     if (imageFile) data.append('image', imageFile);
 
@@ -185,21 +227,24 @@ function editFacility(id) {
     .then(res => {
         if (!res.success) return;
         const f = res.facility;
-        document.getElementById('facilityId').value     = f.id;
-        document.getElementById('formAction').value     = 'edit';
-        document.getElementById('name').value           = f.name;
-        document.getElementById('description').value    = f.description ?? '';
-        document.getElementById('existingImage').value  = f.image ?? '';
-        document.getElementById('formTitle').textContent = '✏️ Edit Facility';
+        document.getElementById('facilityId').value        = f.id;
+        document.getElementById('formAction').value        = 'edit';
+        document.getElementById('name').value              = f.name;
+        document.getElementById('description').value       = f.description     ?? '';
+        document.getElementById('servicesOffered').value   = f.services_offered ?? '';
+        document.getElementById('schedules').value         = f.schedules        ?? '';
+        document.getElementById('existingImage').value     = f.image            ?? '';
+        document.getElementById('formTitle').textContent   = '✏️ Edit Facility';
         document.getElementById('cancelBtn').style.display = 'inline-block';
 
         const img = f.image || DEFAULT_IMG;
         document.getElementById('uploadPlaceholder').style.display = 'none';
         const preview = document.getElementById('imagePreview');
-        preview.src =   img;
+        preview.src = img;
         preview.style.display = 'block';
         document.getElementById('removeImageBtn').style.display = 'inline-block';
 
+        loadPhotoManager(id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 }
@@ -230,11 +275,11 @@ function reloadTable() {
             return;
         }
 
-        tbody.innerHTML = res.facilities.map((f, i) => `
+        tbody.innerHTML = res.facilities.map(f => `
             <tr id="row-${f.id}" style="border-bottom:1px solid #eef1f5;">
                 <td style="padding:11px 14px;font-size:0.85rem;color:#aaa;">${f.id}</td>
                 <td style="padding:11px 14px;">
-                    <img src="../${esc(f.image || DEFAULT_IMG)}"
+                    <img src="${esc(f.image || DEFAULT_IMG)}"
                         style="width:60px;height:40px;object-fit:cover;border-radius:5px;"
                         onerror="this.src='/hms/admin/images/default.jpg'">
                 </td>
@@ -256,12 +301,81 @@ function reloadTable() {
 }
 
 function resetForm() {
-    ['facilityId','name','description'].forEach(id => document.getElementById(id).value = '');
+    ['facilityId','name','description','servicesOffered','schedules'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('formAction').value        = 'add';
     document.getElementById('existingImage').value     = '';
     document.getElementById('formTitle').textContent   = '➕ Add New Facility';
     document.getElementById('cancelBtn').style.display = 'none';
+    document.getElementById('photoManager').style.display = 'none';
+    document.getElementById('photoGrid').innerHTML     = '';
     removeImage();
+}
+
+// ── Photo Gallery ──
+function loadPhotoManager(facilityId) {
+    currentFacilityId = facilityId;
+    document.getElementById('photoManager').style.display = 'block';
+    fetch(AJAX_URL + '?action=get_photos&id=' + facilityId)
+        .then(r => r.json())
+        .then(res => {
+            if (!res.success) return;
+            renderPhotos(res.photos);
+            const titleEl = document.querySelector('#row-' + facilityId + ' td:nth-child(3)');
+            if (titleEl) document.getElementById('photoPostTitle').textContent = '— ' + titleEl.textContent.trim();
+        });
+}
+
+function renderPhotos(photos) {
+    const grid  = document.getElementById('photoGrid');
+    const count = photos.length;
+    document.getElementById('photoCount').textContent = count + ' Photo' + (count !== 1 ? 's' : '');
+    if (!count) {
+        grid.innerHTML = '<p style="color:#aaa;font-size:0.88rem;grid-column:1/-1;">No photos yet. Upload some above.</p>';
+        return;
+    }
+    grid.innerHTML = photos.map(p => `
+        <div style="position:relative;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+            <img src="${esc(p.photo)}" style="width:100%;height:110px;object-fit:cover;display:block;"
+                onerror="this.onerror=null;this.src='/hms/admin/images/default.jpg'">
+            <button onclick="deletePhoto(${p.id})" style="
+                position:absolute;top:6px;right:6px;
+                background:rgba(231,76,60,0.85);color:#fff;
+                border:none;border-radius:50%;width:26px;height:26px;
+                font-size:0.75rem;cursor:pointer;line-height:1;">✕</button>
+        </div>
+    `).join('');
+}
+
+function uploadPhotos() {
+    if (!currentFacilityId) return;
+    const files = document.getElementById('galleryInput').files;
+    if (!files.length) { showToast('Please select at least one photo.', false); return; }
+    const fd = new FormData();
+    fd.append('action',      'add_photos');
+    fd.append('facility_id', currentFacilityId);
+    for (let i = 0; i < files.length; i++) fd.append('photos[]', files[i]);
+    fetch(AJAX_URL, { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(res => {
+            showToast(res.message, res.success);
+            if (res.success) {
+                document.getElementById('galleryInput').value = '';
+                loadPhotoManager(currentFacilityId);
+            }
+        });
+}
+
+function deletePhoto(photoId) {
+    if (!confirm('Delete this photo?')) return;
+    const fd = new FormData();
+    fd.append('action',   'delete_photo');
+    fd.append('photo_id', photoId);
+    fetch(AJAX_URL, { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(res => {
+            showToast(res.message, res.success);
+            if (res.success) loadPhotoManager(currentFacilityId);
+        });
 }
 
 function showToast(msg, success) {

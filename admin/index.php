@@ -4,7 +4,7 @@ include_once __DIR__ . '/includes/config.php';
 
 $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
-$allowed_pages = ['dashboard','users','projects','doctors','info','hmo','services','facility','gallery','roomrates', 'reviews', 'siteinfo', 'blog', 'careers', 'faq'
+$allowed_pages = ['dashboard','users','projects','doctors','info','hmo','services','facility','gallery','roomrates', 'reviews', 'siteinfo', 'blog', 'careers', 'faq', 'legal'
 
                 ];
 if (!in_array($page, $allowed_pages)) {
@@ -198,20 +198,24 @@ if (!in_array($page, $allowed_pages)) {
                 <i class="fas fa-star"></i> Reviews
             </a>    
 
-        <a href="index.php?page=blog" <?= $page==='blog' ? 'class="active"' : '' ?>>
+            <a href="index.php?page=blog" <?= $page==='blog' ? 'class="active"' : '' ?>>
                 <i class="fas fa-newspaper"></i> Blogs
             </a>    
 
+            <a href="index.php?page=legal"  <?= $page==='legal' ? 'class="active"' : '' ?>>
+                            <i class="fas fa-scale-balanced"></i> Legal Pages
+            </a>
+
 
             <a href="index.php?page=careers" <?= $page==='careers' ? 'class="active"' : '' ?>>
-                <i class="fas fa-briefcase-medical"></i> Careers
+                <i class="fas fa-briefcase-medical"></i> Careers & Job Posting
             </a> 
 
             <a href="index.php?page=faq" <?= $page==='faq' ? 'class="active"' : '' ?>>
                 <i class="fas fa-circle-question"></i> FAQ
             </a> 
 
-
+            
         </nav>
 
         <div class="sidebar-footer">

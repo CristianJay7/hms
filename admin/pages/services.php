@@ -34,17 +34,14 @@ define('SVC_DEFAULT', '/hms/admin/images/default.jpg');
         </div>
 
         <div>
-            <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">Font Awesome Icon Class</label>
-            <input type="text" id="serviceIcon" placeholder="e.g. fa-solid fa-ambulance" style="width:100%;padding:9px 12px;border:1px solid #dde3ea;border-radius:6px;font-size:0.9rem;font-family:inherit;outline:none;">
-            <small style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:5px;";">Find icons at <a href="https://fontawesome.com/icons" target="_blank">fontawesome.com/icons</a></small>
+            <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">Font Awesome Icon</label>
+            <input type="text" id="serviceIcon" placeholder="e.g. fa-solid fa-ambulance"
+                style="width:100%;padding:9px 12px;border:1px solid #dde3ea;border-radius:6px;font-size:0.9rem;font-family:inherit;outline:none;">
+            <small style="color:#aaa;">Find icons at <a href="https://fontawesome.com/icons" target="_blank">fontawesome.com</a></small>
         </div>
 
-
-
-
-
         <div>
-            <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">Image</label>
+            <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">Cover Image</label>
             <div id="uploadArea" onclick="document.getElementById('imageInput').click()"
                 style="border:2px dashed #dde3ea;border-radius:6px;padding:14px;text-align:center;cursor:pointer;background:#fafbfc;">
                 <div id="uploadPlaceholder">
@@ -67,6 +64,24 @@ define('SVC_DEFAULT', '/hms/admin/images/default.jpg');
             <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">Description</label>
             <textarea id="description" placeholder="Brief description of this service..."
                 style="width:100%;padding:9px 12px;border:1px solid #dde3ea;border-radius:6px;font-size:0.9rem;font-family:inherit;resize:vertical;min-height:80px;outline:none;"></textarea>
+        </div>
+
+        <div style="grid-column:1/-1;">
+            <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">
+                Services Offered
+                <span style="color:#aaa;font-weight:400;">(one per line — each becomes a checklist item)</span>
+            </label>
+            <textarea id="servicesOffered" rows="5" placeholder="Consultation&#10;Diagnosis & Testing&#10;Treatment Planning&#10;Follow-up Care"
+                style="width:100%;padding:9px 12px;border:1px solid #dde3ea;border-radius:6px;font-size:0.9rem;font-family:inherit;resize:vertical;outline:none;"></textarea>
+        </div>
+
+        <div style="grid-column:1/-1;">
+            <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:5px;">
+                Schedules
+                <span style="color:#aaa;font-weight:400;">(one per line, e.g. Monday - Friday: 8:00 AM - 5:00 PM)</span>
+            </label>
+            <textarea id="schedules" rows="4" placeholder="Monday - Friday: 8:00 AM - 5:00 PM&#10;Saturday: 8:00 AM - 12:00 PM&#10;Sunday: Closed"
+                style="width:100%;padding:9px 12px;border:1px solid #dde3ea;border-radius:6px;font-size:0.9rem;font-family:inherit;resize:vertical;outline:none;"></textarea>
         </div>
 
     </div>
@@ -99,8 +114,8 @@ define('SVC_DEFAULT', '/hms/admin/images/default.jpg');
         <tr style="background:#1a3c5e;">
             <th style="padding:11px 14px;text-align:left;font-size:0.75rem;color:rgba(255,255,255,0.65);font-weight:600;letter-spacing:0.8px;text-transform:uppercase;">#</th>
             <th style="padding:11px 14px;text-align:left;font-size:0.75rem;color:rgba(255,255,255,0.65);font-weight:600;letter-spacing:0.8px;text-transform:uppercase;">Image</th>
-            <th style="padding:11px 14px;text-align:left;font-size:0.75rem;color:rgba(255,255,255,0.65);font-weight:600;letter-spacing:0.8px;text-transform:uppercase;">Name</th>
             <th style="padding:11px 14px;text-align:left;font-size:0.75rem;color:rgba(255,255,255,0.65);font-weight:600;letter-spacing:0.8px;text-transform:uppercase;">Icon</th>
+            <th style="padding:11px 14px;text-align:left;font-size:0.75rem;color:rgba(255,255,255,0.65);font-weight:600;letter-spacing:0.8px;text-transform:uppercase;">Name</th>
             <th style="padding:11px 14px;text-align:left;font-size:0.75rem;color:rgba(255,255,255,0.65);font-weight:600;letter-spacing:0.8px;text-transform:uppercase;">Description</th>
             <th style="padding:11px 14px;text-align:left;font-size:0.75rem;color:rgba(255,255,255,0.65);font-weight:600;letter-spacing:0.8px;text-transform:uppercase;">Actions</th>
         </tr>
@@ -109,7 +124,7 @@ define('SVC_DEFAULT', '/hms/admin/images/default.jpg');
         <?php if (empty($services)): ?>
             <tr><td colspan="6" style="padding:40px;text-align:center;color:#aaa;">No services yet. Add one above.</td></tr>
         <?php else: ?>
-            <?php foreach ($services as $i => $s):
+            <?php foreach ($services as $s):
                 $img = !empty($s['image']) ? $s['image'] : SVC_DEFAULT;
             ?>
             <tr id="row-<?= $s['id'] ?>" style="border-bottom:1px solid #eef1f5;">
@@ -117,12 +132,14 @@ define('SVC_DEFAULT', '/hms/admin/images/default.jpg');
                 <td style="padding:11px 14px;">
                     <img src="<?= htmlspecialchars($img) ?>"
                         style="width:60px;height:40px;object-fit:cover;border-radius:5px;"
-                        onerror="this.src='/hms/admin/images/default.jpg'">
+                        onerror="this.onerror=null;this.src='/hms/admin/images/default.jpg'">
+                </td>
+                <td style="padding:11px 14px;font-size:1.2rem;color:#00b6bd;">
+                    <i class="<?= htmlspecialchars($s['icon'] ?? '') ?>"></i>
                 </td>
                 <td style="padding:11px 14px;font-size:0.88rem;font-weight:600;color:#1a3c5e;"><?= htmlspecialchars($s['name']) ?></td>
-                <td style="padding:11px 14px;font-size:1.4rem;color:#00b6bd;"><i class="<?= htmlspecialchars($s['icon'] ?? 'fa-solid fa-stethoscope') ?>"></i></td>
-                <td style="padding:11px 14px;font-size:0.82rem;color:#778899;max-width:260px;">
-                    <?= htmlspecialchars(mb_strimwidth($s['description'] ?? '', 0, 80, '...')) ?>
+                <td style="padding:11px 14px;font-size:0.82rem;color:#778899;max-width:220px;">
+                    <?= htmlspecialchars(mb_strimwidth($s['description'] ?? '', 0, 70, '...')) ?>
                 </td>
                 <td style="padding:11px 14px;">
                     <div style="display:flex;gap:8px;">
@@ -139,9 +156,29 @@ define('SVC_DEFAULT', '/hms/admin/images/default.jpg');
 </table>
 </div>
 
+<!-- Photo Gallery Manager -->
+<div id="photoManager" style="display:none;margin-top:32px;">
+    <hr style="border:none;border-top:1px solid #eef1f5;margin-bottom:24px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <h4 style="font-size:1rem;color:#1a3c5e;">📷 Photo Gallery <span id="photoPostTitle" style="color:#00b6bd;"></span></h4>
+        <span id="photoCount" style="background:#e8f0f8;color:#1a3c5e;font-size:0.78rem;font-weight:700;padding:3px 12px;border-radius:20px;">0 Photos</span>
+    </div>
+    <div style="margin-bottom:20px;">
+        <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:8px;">Add Photos <span style="color:#aaa;font-weight:400;">(select multiple)</span></label>
+        <input type="file" id="galleryInput" accept="image/jpeg,image/png,image/webp" multiple
+            style="padding:8px;border:1px solid #dde3ea;border-radius:6px;width:100%;font-size:0.88rem;">
+        <button onclick="uploadPhotos()"
+            style="margin-top:10px;padding:9px 22px;background:#00b6bd;color:#fff;border:none;border-radius:6px;font-size:0.88rem;font-weight:600;cursor:pointer;">
+            Upload Photos
+        </button>
+    </div>
+    <div id="photoGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;"></div>
+</div>
+
 <script>
-const AJAX_URL   = 'services-ajax.php';
-const DEFAULT_IMG = '/hms/admin/images/default.jpg';
+const AJAX_URL    = '/hms/admin/services-ajax.php';
+const DEFAULT_IMG  = '/hms/admin/images/default.jpg';
+let currentServiceId = null;
 
 function previewImage(input) {
     if (!input.files || !input.files[0]) return;
@@ -166,22 +203,26 @@ function removeImage() {
 }
 
 function saveService() {
-    const id            = document.getElementById('serviceId').value;
-    const action        = document.getElementById('formAction').value;
-    const name          = document.getElementById('name').value.trim();
-    const icon = document.getElementById('serviceIcon').value.trim();
-    const description   = document.getElementById('description').value.trim();
-    const existingImage = document.getElementById('existingImage').value;
-    const imageFile     = document.getElementById('imageInput').files[0];
+    const id              = document.getElementById('serviceId').value;
+    const action          = document.getElementById('formAction').value;
+    const name            = document.getElementById('name').value.trim();
+    const icon            = document.getElementById('serviceIcon').value.trim();
+    const description     = document.getElementById('description').value.trim();
+    const servicesOffered = document.getElementById('servicesOffered').value.trim();
+    const schedules       = document.getElementById('schedules').value.trim();
+    const existingImage   = document.getElementById('existingImage').value;
+    const imageFile       = document.getElementById('imageInput').files[0];
 
     if (!name) { showToast('Service name is required.', false); return; }
 
     const data = new FormData();
-    data.append('action', action);
-    data.append('name', name);
-    data.append('icon', icon);
-    data.append('description', description);
-    data.append('existing_image', existingImage);
+    data.append('action',           action);
+    data.append('name',             name);
+    data.append('icon',             icon);
+    data.append('description',      description);
+    data.append('services_offered', servicesOffered);
+    data.append('schedules',        schedules);
+    data.append('existing_image',   existingImage);
     if (id) data.append('id', id);
     if (imageFile) data.append('image', imageFile);
 
@@ -199,22 +240,25 @@ function editService(id) {
     .then(res => {
         if (!res.success) return;
         const s = res.service;
-        document.getElementById('serviceId').value      = s.id;
-        document.getElementById('formAction').value     = 'edit';
-        document.getElementById('name').value           = s.name;
-        document.getElementById('serviceIcon').value = s.icon ?? 'fa-solid fa-stethoscope';
-        document.getElementById('description').value   = s.description ?? '';
-        document.getElementById('existingImage').value  = s.image ?? '';
-        document.getElementById('formTitle').textContent = '✏️ Edit Service';
-        document.getElementById('cancelBtn').style.display = 'inline-block';
+        document.getElementById('serviceId').value          = s.id;
+        document.getElementById('formAction').value         = 'edit';
+        document.getElementById('name').value               = s.name;
+        document.getElementById('serviceIcon').value        = s.icon              ?? '';
+        document.getElementById('description').value        = s.description       ?? '';
+        document.getElementById('servicesOffered').value    = s.services_offered  ?? '';
+        document.getElementById('schedules').value          = s.schedules          ?? '';
+        document.getElementById('existingImage').value      = s.image              ?? '';
+        document.getElementById('formTitle').textContent    = '✏️ Edit Service';
+        document.getElementById('cancelBtn').style.display  = 'inline-block';
 
         const img = s.image || DEFAULT_IMG;
         document.getElementById('uploadPlaceholder').style.display = 'none';
         const preview = document.getElementById('imagePreview');
-        preview.src =  img;
+        preview.src = img;
         preview.style.display = 'block';
         document.getElementById('removeImageBtn').style.display = 'inline-block';
 
+        loadPhotoManager(id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 }
@@ -245,20 +289,18 @@ function reloadTable() {
             return;
         }
 
-        tbody.innerHTML = res.services.map((s, i) => `
+        tbody.innerHTML = res.services.map(s => `
             <tr id="row-${s.id}" style="border-bottom:1px solid #eef1f5;">
                 <td style="padding:11px 14px;font-size:0.85rem;color:#aaa;">${s.id}</td>
                 <td style="padding:11px 14px;">
                     <img src="${esc(s.image || DEFAULT_IMG)}"
                         style="width:60px;height:40px;object-fit:cover;border-radius:5px;"
-                        onerror="this.src='/hms/admin/images/default.jpg'">
+                        onerror="this.onerror=null;this.src='/hms/admin/images/default.jpg'">
                 </td>
+                <td style="padding:11px 14px;font-size:1.2rem;color:#00b6bd;"><i class="${esc(s.icon||'')}"></i></td>
                 <td style="padding:11px 14px;font-size:0.88rem;font-weight:600;color:#1a3c5e;">${esc(s.name)}</td>
-                <td style="padding:11px 14px;font-size:1.4rem;color:#00b6bd;"><i class="${esc(s.icon || 'fa-solid fa-stethoscope')}"></i></td>
-    
-
-                <td style="padding:11px 14px;font-size:0.82rem;color:#778899;max-width:260px;">
-                    ${esc((s.description || '').substring(0, 80))}${(s.description || '').length > 80 ? '...' : ''}
+                <td style="padding:11px 14px;font-size:0.82rem;color:#778899;max-width:220px;">
+                    ${esc((s.description||'').substring(0,70))}${(s.description||'').length>70?'...':''}
                 </td>
                 <td style="padding:11px 14px;">
                     <div style="display:flex;gap:8px;">
@@ -274,12 +316,81 @@ function reloadTable() {
 }
 
 function resetForm() {
-    ['serviceId','name','description','serviceIcon'].forEach(id => document.getElementById(id).value = '');
+    ['serviceId','name','serviceIcon','description','servicesOffered','schedules'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('formAction').value        = 'add';
     document.getElementById('existingImage').value     = '';
     document.getElementById('formTitle').textContent   = '➕ Add New Service';
     document.getElementById('cancelBtn').style.display = 'none';
+    document.getElementById('photoManager').style.display = 'none';
+    document.getElementById('photoGrid').innerHTML     = '';
     removeImage();
+}
+
+// ── Photo Gallery ──
+function loadPhotoManager(serviceId) {
+    currentServiceId = serviceId;
+    document.getElementById('photoManager').style.display = 'block';
+    fetch(AJAX_URL + '?action=get_photos&id=' + serviceId)
+        .then(r => r.json())
+        .then(res => {
+            if (!res.success) return;
+            renderPhotos(res.photos);
+            const titleEl = document.querySelector('#row-' + serviceId + ' td:nth-child(4)');
+            if (titleEl) document.getElementById('photoPostTitle').textContent = '— ' + titleEl.textContent.trim();
+        });
+}
+
+function renderPhotos(photos) {
+    const grid  = document.getElementById('photoGrid');
+    const count = photos.length;
+    document.getElementById('photoCount').textContent = count + ' Photo' + (count !== 1 ? 's' : '');
+    if (!count) {
+        grid.innerHTML = '<p style="color:#aaa;font-size:0.88rem;grid-column:1/-1;">No photos yet.</p>';
+        return;
+    }
+    grid.innerHTML = photos.map(p => `
+        <div style="position:relative;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+            <img src="${esc(p.photo)}" style="width:100%;height:110px;object-fit:cover;display:block;"
+                onerror="this.onerror=null;this.src='/hms/admin/images/default.jpg'">
+            <button onclick="deletePhoto(${p.id})" style="
+                position:absolute;top:6px;right:6px;
+                background:rgba(231,76,60,0.85);color:#fff;
+                border:none;border-radius:50%;width:26px;height:26px;
+                font-size:0.75rem;cursor:pointer;line-height:1;">✕</button>
+        </div>
+    `).join('');
+}
+
+function uploadPhotos() {
+    if (!currentServiceId) return;
+    const files = document.getElementById('galleryInput').files;
+    if (!files.length) { showToast('Please select at least one photo.', false); return; }
+    const fd = new FormData();
+    fd.append('action',     'add_photos');
+    fd.append('service_id', currentServiceId);
+    for (let i = 0; i < files.length; i++) fd.append('photos[]', files[i]);
+    fetch(AJAX_URL, { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(res => {
+            showToast(res.message, res.success);
+            if (res.success) {
+                document.getElementById('galleryInput').value = '';
+                loadPhotoManager(currentServiceId);
+            }
+        });
+}
+
+function deletePhoto(photoId) {
+    if (!confirm('Delete this photo?')) return;
+    const fd = new FormData();
+    fd.append('action',   'delete_photo');
+    fd.append('photo_id', photoId);
+    fetch(AJAX_URL, { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(res => {
+            showToast(res.message, res.success);
+            if (res.success) loadPhotoManager(currentServiceId);
+        });
 }
 
 function showToast(msg, success) {

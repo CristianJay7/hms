@@ -1,6 +1,10 @@
 <?php
 include 'includes/config.php';
 include 'includes/info.php';
+ 
+$sections_res = mysqli_query($con, "SELECT * FROM privacy_sections ORDER BY sort_order ASC");
+$sections     = [];
+while ($row = mysqli_fetch_assoc($sections_res)) $sections[] = $row;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,46 +25,26 @@ include 'includes/info.php';
     <div class="legal-hero">
         <div class="legal-hero-icon" style="margin-top: 20px;"><i class="fas fa-shield-halved"></i></div>
         <h1><?= info('privacy_title', 'Privacy Notice') ?></h1>
-        <p>Last updated: <?= date('F d, Y', strtotime(info('privacy_updated', '2024-01-01'))) ?></p>
+        <p>Last updated: <?= date('F d, Y', strtotime(info('privacy_updated', date('Y-m-d')))) ?></p>
     </div>
-
+ 
     <div class="legal-container">
         <div class="legal-card">
-            <div class="legal-section">
-                <div class="legal-icon"><i class="fas fa-info-circle"></i></div>
-                <div class="legal-content">
-                    <h2>Overview</h2>
-                    <p><?= info('privacy_intro') ?></p>
+            <?php if (empty($sections)): ?>
+                <p style="text-align:center;color:#aaa;padding:40px 0;">No content yet.</p>
+            <?php else: ?>
+                <?php foreach ($sections as $s): ?>
+                <div class="legal-section">
+                    <div class="legal-icon">
+                        <i class="<?= htmlspecialchars($s['icon'] ?? 'fa-solid fa-circle-info') ?>"></i>
+                    </div>
+                    <div class="legal-content">
+                        <h2><?= htmlspecialchars($s['title']) ?></h2>
+                        <p><?= htmlspecialchars($s['content']) ?></p>
+                    </div>
                 </div>
-            </div>
-            <div class="legal-section">
-                <div class="legal-icon"><i class="fas fa-database"></i></div>
-                <div class="legal-content">
-                    <h2>Information We Collect</h2>
-                    <p><?= info('privacy_collection') ?></p>
-                </div>
-            </div>
-            <div class="legal-section">
-                <div class="legal-icon"><i class="fas fa-stethoscope"></i></div>
-                <div class="legal-content">
-                    <h2>How We Use Your Information</h2>
-                    <p><?= info('privacy_use') ?></p>
-                </div>
-            </div>
-            <div class="legal-section">
-                <div class="legal-icon"><i class="fas fa-user-check"></i></div>
-                <div class="legal-content">
-                    <h2>Your Rights</h2>
-                    <p><?= info('privacy_rights') ?></p>
-                </div>
-            </div>
-            <div class="legal-section">
-                <div class="legal-icon"><i class="fas fa-envelope"></i></div>
-                <div class="legal-content">
-                    <h2>Contact Us</h2>
-                    <p><?= info('privacy_contact') ?></p>
-                </div>
-            </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 </div>
