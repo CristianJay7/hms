@@ -110,6 +110,7 @@ while ($row = mysqli_fetch_assoc($reviews_res)) $reviews_pub[] = $row;
 .review-dots span.active { background: #00b6bd; }
 
 .review-stars { margin-bottom: 8px; font-size: 1rem; }
+.review-stars span {font-size: 2rem;}
 
 @media (max-width: 991px) {
     #reviewTrack .box { min-width: calc((100% - 20px) / 2); }

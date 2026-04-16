@@ -99,6 +99,10 @@ body { background:#f5f6f8; color:#333; }
     box-shadow: 0 8px 30px rgba(0,0,0,0.07);
     border-top: 4px solid #00b6bd;
     transition: transform 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .mv-card:hover { transform: translateY(-12px); }
@@ -314,14 +318,14 @@ body { background:#f5f6f8; color:#333; }
     <!-- ── Mission & Vision ── -->
     <div class="mission-vision">
         <div class="mv-card">
-        <div class="icon"><i class="fas fa-eye"></i></div>
+        <div class="icon"><i class="fa fa-eye"></i></div>
             <h3>Our Vision</h3>
             <p style="text-align: justify; hyphens: auto; text-transform: none;">
             <?= $about_vision ?>
             </p>
         </div>
         <div class="mv-card">
-        <div class="icon"><i class="fas fa-heart"></i></div>
+        <div class="icon"><i class="fa fa-heart"></i></div>
             <h3>Our Mission</h3>
             <p style="text-align: justify; hyphens: auto; white-space: pre-line; text-transform: none;">
             <?= $about_mission ?>
@@ -365,7 +369,7 @@ body { background:#f5f6f8; color:#333; }
         </div>
     </div>
 
-    <!-- ── President Message  hardcoded── -->
+<!-- ── President Message  hardcoded── -->
     <div class="president">
         <div class="president-text">
             <span class="section-label">A Word From Leadership</span>
@@ -396,7 +400,21 @@ body { background:#f5f6f8; color:#333; }
     </div>
 
 </section>
+<!-- review services start -->
 
+<?php include '<includes/review.php'; ?>
+   
+<!-- review section end -->
+
+
+<!-- hmo section start  -->
+
+<?php include '<includes/hmodisplay.php'; ?>
+
+<!-- hmo section end  -->
+
+
+<br><br>
 <?php include 'includes/footer.php'; ?>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

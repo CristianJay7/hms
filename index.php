@@ -144,10 +144,10 @@ while ($row = mysqli_fetch_assoc($blogs_res)) $blogs_pub[] = $row;
                         <h2><?= htmlspecialchars($b['title']) ?></h2>
                     </a>
                     <p style="text-transform: none;"><?php
-    $words = explode(' ', $b['excerpt']);
-    echo htmlspecialchars(implode(' ', array_slice($words, 0, 8)));
-    echo count($words) > 8 ? '...' : '';
-?></p>
+                        $words = explode(' ', $b['excerpt']);
+                        echo htmlspecialchars(implode(' ', array_slice($words, 0, 8)));
+                        echo count($words) > 8 ? '...' : '';
+                    ?></p>
                     <a href="update/<?= $b['id'] ?>">
                         <button class="button">Learn more</button>
                     </a>
