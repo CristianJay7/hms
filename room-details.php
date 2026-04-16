@@ -12,9 +12,12 @@ if (!$room) { header('Location: roomrates.php'); exit; }
 $all    = [];
 $res2   = mysqli_query($con, "SELECT id, name, price_per_night FROM roomrates ORDER BY created_at ASC");
 while ($r = mysqli_fetch_assoc($res2)) $all[] = $r;
-
+$pres   = mysqli_query($con, "SELECT * FROM room_photos WHERE room_id=$id ORDER BY created_at ASC");
+$photos = [];
+while ($p = mysqli_fetch_assoc($pres)) $photos[] = $p;
 // Parse amenities into array
 $amenities = array_filter(array_map('trim', explode(',', $room['amenities'] ?? '')));
+$cover = !empty($room['image']) ? $room['image'] : '/hms/admin/images/default.jpg';
 ?>
 <?php include 'includes/info.php'; ?>
 <!DOCTYPE html>
@@ -43,8 +46,8 @@ body { background:#f5f6f8; color:#333; }
 .details-main {}
 
 .details-img {
-    width: 100%;
-    height: 420px;
+    width: 90%;
+    height: 620px;
     object-fit: cover;
     border-radius: 20px;
     box-shadow: 0 12px 40px rgba(0,0,0,0.12);
@@ -214,7 +217,7 @@ body { background:#f5f6f8; color:#333; }
     .details-section { grid-template-columns: 1fr; }
     .details-sidebar { order: -1; }
     .sidebar-card { position: static; }
-    .details-img { height: 280px; }
+    .details-img { height: 200px; width: 100%; }
     .details-main h1 { font-size: 1.8rem; }
 }
 
@@ -235,6 +238,81 @@ html, body {
     top: 110px;
     transition: none !important;
 }
+ /* ── Photo Gallery ── */
+ .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .photo-gallery-item {
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 4/3;
+            background: #eef1f5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .photo-gallery-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+        }
+        .photo-gallery-item img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .no-photos {
+            color: #aaa;
+            font-size: 0.88rem;
+            padding: 20px 0;
+        }
+
+        
+        /* ── Lightbox ── */
+        #lightbox {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.92);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        #lightbox.active { display: flex; }
+        #lightbox img {
+            max-width: 90vw;
+            max-height: 88vh;
+            border-radius: 10px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+        }
+        #lightbox-close {
+            position: absolute; top: 20px; right: 28px;
+            color: #fff; font-size: 2rem;
+            cursor: pointer; line-height: 1;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        #lightbox-close:hover { opacity: 1; }
+        #lightbox-prev, #lightbox-next {
+            position: absolute;
+            top: 50%; transform: translateY(-50%);
+            background: rgba(255,255,255,0.12);
+            border: none; color: #fff;
+            font-size: 1.6rem;
+            padding: 14px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        #lightbox-prev:hover, #lightbox-next:hover { background: rgba(255,255,255,0.25); }
+        #lightbox-prev { left: 20px; }
+        #lightbox-next { right: 20px; }
+        #lightbox-counter {
+            position: absolute; bottom: 20px;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+        }
 </style>
 </head>
 <body>
@@ -278,6 +356,22 @@ html, body {
         </div>
         <?php endif; ?>
 
+                 <!-- Photo Gallery -->
+        <div class="room-section-title">Photo Gallery</div>
+        <?php if (empty($photos)): ?>
+            <p class="no-photos">No additional photos available for this room.</p>
+        <?php else: ?>
+        <div class="photo-gallery">
+            <?php foreach ($photos as $i => $p): ?>
+            <div class="photo-gallery-item" onclick="openLightbox(<?= $i ?>)">
+                <img src="<?= htmlspecialchars($p['photo']) ?>"
+                     alt="Room photo <?= $i + 1 ?>"
+                     onerror="this.onerror=null;this.src='/hms/admin/images/default.jpg'">
+            </div>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+<br><br>
         <a href="/hms/roomrates" class="back-btn">
             <i class="fas fa-arrow-left"></i> Back to All Rooms
         </a>
@@ -300,6 +394,55 @@ html, body {
 </div>
 
 <?php include 'includes/footer.php'; ?>
+<!-- Lightbox -->
+<?php if (!empty($photos)): ?>
+<div id="lightbox">
+    <span id="lightbox-close" onclick="closeLightbox()">✕</span>
+    <button id="lightbox-prev" onclick="shiftPhoto(-1)">&#8249;</button>
+    <img id="lightbox-img" src="" alt="">
+    <button id="lightbox-next" onclick="shiftPhoto(1)">&#8250;</button>
+    <span id="lightbox-counter"></span>
+</div>
+ 
+<script>
+const photos  = <?= json_encode(array_values(array_column($photos, 'photo'))) ?>;
+let current   = 0;
+ 
+function openLightbox(index) {
+    current = index;
+    updateLightbox();
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+ 
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+}
+ 
+function shiftPhoto(dir) {
+    current = (current + dir + photos.length) % photos.length;
+    updateLightbox();
+}
+ 
+function updateLightbox() {
+    document.getElementById('lightbox-img').src = photos[current];
+    document.getElementById('lightbox-counter').textContent = (current + 1) + ' / ' + photos.length;
+}
+ 
+// Close on backdrop click
+document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+});
+ 
+// Keyboard nav
+document.addEventListener('keydown', function(e) {
+    if (!document.getElementById('lightbox').classList.contains('active')) return;
+    if (e.key === 'ArrowLeft')  shiftPhoto(-1);
+    if (e.key === 'ArrowRight') shiftPhoto(1);
+    if (e.key === 'Escape')     closeLightbox();
+});
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="/hms/js/main.js"></script>
 <script>
@@ -307,5 +450,6 @@ html, body {
         document.querySelector('header').classList.add('header-light');
     });
 </script>
+<?php endif; ?>
 </body>
 </html>

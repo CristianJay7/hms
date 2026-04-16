@@ -143,6 +143,25 @@ while ($row = mysqli_fetch_assoc($result)) $rooms[] = $row;
 </table>
 </div>
 
+<!-- Photo Gallery Manager — shown after clicking Edit -->
+<div id="photoManager" style="display:none;margin-top:32px;">
+    <hr style="border:none;border-top:1px solid #eef1f5;margin-bottom:24px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <h4 style="font-size:1rem;color:#1a3c5e;">📷 Room Photo Gallery <span id="photoRoomTitle" style="color:#00b6bd;"></span></h4>
+        <span id="photoCount" style="background:#e8f0f8;color:#1a3c5e;font-size:0.78rem;font-weight:700;padding:3px 12px;border-radius:20px;">0 Photos</span>
+    </div>
+    <div style="margin-bottom:20px;">
+        <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:8px;">Add Photos <span style="color:#aaa;font-weight:400;">(select multiple)</span></label>
+        <input type="file" id="galleryInput" accept="image/jpeg,image/png,image/webp" multiple
+            style="padding:8px;border:1px solid #dde3ea;border-radius:6px;width:100%;font-size:0.88rem;">
+        <button onclick="uploadPhotos()"
+            style="margin-top:10px;padding:9px 22px;background:#00b6bd;color:#fff;border:none;border-radius:6px;font-size:0.88rem;font-weight:600;cursor:pointer;">
+            Upload Photos
+        </button>
+    </div>
+    <div id="photoGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;"></div>
+</div>
+
 <script>
 const AJAX_URL = 'roomrates-ajax.php';
 
@@ -227,6 +246,7 @@ function editRoom(id) {
                 document.getElementById('removeImageBtn').style.display = 'inline-block';
             }
 
+            loadPhotoManager(id);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 }
@@ -295,7 +315,83 @@ function resetForm() {
     document.getElementById('removeImageFlag').value    = '0';
     document.getElementById('formTitle').textContent    = '➕ Add New Room';
     document.getElementById('cancelBtn').style.display  = 'none';
+    document.getElementById('photoManager').style.display = 'none';
+    document.getElementById('photoGrid').innerHTML      = '';
     removeImage();
+}
+
+// ── Photo Gallery ──
+let currentRoomId = null;
+
+function loadPhotoManager(roomId) {
+    currentRoomId = roomId;
+    document.getElementById('photoManager').style.display = 'block';
+
+    fetch(AJAX_URL + '?action=get_photos&id=' + roomId)
+        .then(r => r.json())
+        .then(res => {
+            if (!res.success) return;
+            renderPhotos(res.photos);
+            const titleEl = document.querySelector('#row-' + roomId + ' td:nth-child(3)');
+            if (titleEl) document.getElementById('photoRoomTitle').textContent = '— ' + titleEl.textContent.trim();
+        });
+}
+
+function renderPhotos(photos) {
+    const grid  = document.getElementById('photoGrid');
+    const count = photos.length;
+    document.getElementById('photoCount').textContent = count + ' Photo' + (count !== 1 ? 's' : '');
+
+    if (!count) {
+        grid.innerHTML = '<p style="color:#aaa;font-size:0.88rem;grid-column:1/-1;">No photos yet. Upload some above.</p>';
+        return;
+    }
+
+    grid.innerHTML = photos.map(p => `
+        <div id="photo-${p.id}" style="position:relative;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+            <img src="${esc(p.photo)}" style="width:100%;height:110px;object-fit:cover;display:block;"
+                onerror="this.onerror=null;this.src='/hms/admin/images/default.jpg'">
+            <button onclick="deletePhoto(${p.id})" style="
+                position:absolute;top:6px;right:6px;
+                background:rgba(231,76,60,0.85);color:#fff;
+                border:none;border-radius:50%;width:26px;height:26px;
+                font-size:0.75rem;cursor:pointer;line-height:1;">✕</button>
+        </div>
+    `).join('');
+}
+
+function uploadPhotos() {
+    if (!currentRoomId) return;
+    const files = document.getElementById('galleryInput').files;
+    if (!files.length) { showToast('Please select at least one photo.', false); return; }
+
+    const fd = new FormData();
+    fd.append('action',  'add_photos');
+    fd.append('room_id', currentRoomId);
+    for (let i = 0; i < files.length; i++) fd.append('photos[]', files[i]);
+
+    fetch(AJAX_URL, { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(res => {
+            showToast(res.message, res.success);
+            if (res.success) {
+                document.getElementById('galleryInput').value = '';
+                loadPhotoManager(currentRoomId);
+            }
+        });
+}
+
+function deletePhoto(photoId) {
+    if (!confirm('Delete this photo?')) return;
+    const fd = new FormData();
+    fd.append('action',   'delete_photo');
+    fd.append('photo_id', photoId);
+    fetch(AJAX_URL, { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(res => {
+            showToast(res.message, res.success);
+            if (res.success) loadPhotoManager(currentRoomId);
+        });
 }
 
 function showToast(msg, success) {

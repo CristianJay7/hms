@@ -137,7 +137,73 @@ switch ($action) {
             echo json_encode(['success' => false, 'message' => 'Database error.']);
         }
         break;
-
+    
+        case 'get_photos':
+            $room_id = intval($_GET['id'] ?? 0);
+            $res     = mysqli_query($con, "SELECT * FROM room_photos WHERE room_id=$room_id ORDER BY created_at ASC");
+            $photos  = [];
+            while ($row = mysqli_fetch_assoc($res)) $photos[] = $row;
+            echo json_encode(['success' => true, 'photos' => $photos]);
+            break;
+     
+        case 'add_photos':
+            $room_id = intval($_POST['room_id'] ?? 0);
+            if (!$room_id) { echo json_encode(['success' => false, 'message' => 'Invalid room ID.']); break; }
+     
+            $allowed  = ['image/jpeg','image/png','image/webp','image/jpg'];
+            $photo_dir = 'images/roomrates/';
+            if (!is_dir($photo_dir)) mkdir($photo_dir, 0755, true);
+            $uploaded = 0;
+            $failed   = 0;
+     
+            if (!empty($_FILES['photos']['name'][0])) {
+                $count = count($_FILES['photos']['name']);
+                for ($i = 0; $i < $count; $i++) {
+                    $file = [
+                        'name'     => $_FILES['photos']['name'][$i],
+                        'type'     => $_FILES['photos']['type'][$i],
+                        'tmp_name' => $_FILES['photos']['tmp_name'][$i],
+                        'error'    => $_FILES['photos']['error'][$i],
+                        'size'     => $_FILES['photos']['size'][$i],
+                    ];
+                    if ($file['error'] !== 0) { $failed++; continue; }
+                    if (!in_array(strtolower($file['type']), $allowed)) { $failed++; continue; }
+     
+                    $ext  = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+                    $name = uniqid('room_gallery_') . '.' . $ext;
+                    $dest = $photo_dir . $name;
+     
+                    if (move_uploaded_file($file['tmp_name'], $dest)) {
+                        $path = mysqli_real_escape_string($con, '/hms/admin/' . $dest);
+                        mysqli_query($con, "INSERT INTO room_photos (room_id, photo) VALUES ($room_id, '$path')");
+                        $uploaded++;
+                    } else {
+                        $failed++;
+                    }
+                }
+            }
+     
+            echo $uploaded > 0
+                ? json_encode(['success' => true,  'message' => "$uploaded photo(s) uploaded successfully!"])
+                : json_encode(['success' => false, 'message' => 'No photos were uploaded.']);
+            break;
+     
+        case 'delete_photo':
+            $photo_id = intval($_POST['photo_id'] ?? 0);
+            if (!$photo_id) { echo json_encode(['success' => false, 'message' => 'Invalid photo ID.']); break; }
+     
+            $res = mysqli_query($con, "SELECT photo FROM room_photos WHERE id=$photo_id");
+            $row = mysqli_fetch_assoc($res);
+            if (!empty($row['photo'])) {
+                $abs = $_SERVER['DOCUMENT_ROOT'] . $row['photo'];
+                if (file_exists($abs)) unlink($abs);
+            }
+     
+            echo mysqli_query($con, "DELETE FROM room_photos WHERE id=$photo_id")
+                ? json_encode(['success' => true,  'message' => 'Photo deleted.'])
+                : json_encode(['success' => false, 'message' => 'DB error.']);
+            break;
+     
     default:
         echo json_encode(['success' => false, 'message' => 'Invalid action.']);
 }
