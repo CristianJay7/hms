@@ -4,7 +4,7 @@ include_once __DIR__ . '/includes/config.php';
 
 $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
-$allowed_pages = ['dashboard','users','projects','doctors','info','hmo','services','facility','gallery','roomrates', 'reviews', 'siteinfo', 'blog', 'careers', 'faq', 'legal'
+$allowed_pages = ['dashboard','users','projects','doctors','info','hmo','services','facility','gallery','roomrates', 'reviews', 'siteinfo', 'blog', 'careers', 'faq', 'legal', 'certifications','packages'
 
                 ];
 if (!in_array($page, $allowed_pages)) {
@@ -215,7 +215,13 @@ if (!in_array($page, $allowed_pages)) {
                 <i class="fas fa-circle-question"></i> FAQ
             </a> 
 
-            
+            <a href="index.php?page=packages" <?= $page==='packages' ? 'class="active"' : '' ?>>
+                <i class="fas fa-circle-question"></i>Packages
+            </a>
+            <a href="index.php?page=certifications" <?= $page==='certifications' ? 'class="active"' : '' ?>>
+                <i class="fas fa-circle-question"></i> Certifications
+            </a>
+
         </nav>
 
         <div class="sidebar-footer">
