@@ -28,7 +28,7 @@ if (isset($con)) {
                 <a href="#">Services <i class="fas fa-caret-down"></i></a>
                 <ul class="dropdown-menu">
                     <li><a href="/hms/hmo">HMO and Insurances</a></li>
-                    <li><a href="#">Medical Packages</a></li>
+                    <li><a href="/hms/packages">Medical Packages</a></li>
                     <li><a href="/hms/roomrates">Room Rates</a></li>
 
                     <li class="dropdown-submenu">

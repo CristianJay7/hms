@@ -11,9 +11,10 @@ while ($row = mysqli_fetch_assoc($res)) $certs[] = $row;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certifications & Permits — <?= info('site_name') ?></title>
+    <title>Certifications & Permits | Zamboanga Doctors' Hospital, Inc.</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <?php include 'includes/favicon.php'; ?>
     <style>
         /* ── Page Hero ── */
         .page-hero {
@@ -163,6 +164,7 @@ while ($row = mysqli_fetch_assoc($res)) $certs[] = $row;
             color: #aaa;
         }
         .cert-empty i { font-size: 3rem; margin-bottom: 16px; opacity: 0.3; }
+        .cert-empty p { font-size: 1.3rem; }
     </style>
 </head>
 <body>

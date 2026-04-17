@@ -43,7 +43,7 @@ Our hospital is dedicated to delivering comprehensive medical care through exper
       <ul>
         <li><a href="/hms/aboutus">About</a></li>
         <li><a href="/hms/careers">Careers</a></li>        
-        <li><a href="/hms/org-chart">Organizational Chart</a></li>
+        <li><a href="/hms/certifications">Permit and Certifications</a></li>
         <li><a href="/hms/privacy">Privacy Notice</a></li>
         <li><a href="/hms/patient-rights">Patient Right</a></li>
         <li><a href="/hms/terms">Terms and Condition</a></li>

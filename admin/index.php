@@ -216,10 +216,10 @@ if (!in_array($page, $allowed_pages)) {
             </a> 
 
             <a href="index.php?page=packages" <?= $page==='packages' ? 'class="active"' : '' ?>>
-                <i class="fas fa-circle-question"></i>Packages
+                <i class="fas fa-box"></i>Packages
             </a>
             <a href="index.php?page=certifications" <?= $page==='certifications' ? 'class="active"' : '' ?>>
-                <i class="fas fa-circle-question"></i> Certifications
+                <i class="fas fa-award"></i> Certifications
             </a>
 
         </nav>
