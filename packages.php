@@ -15,6 +15,8 @@ while ($row = mysqli_fetch_assoc($res)) $packages[] = $row;
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <?php include 'includes/favicon.php'; ?>
+
+
     <style>
         /* ── Page Hero ── */
         .page-hero {
@@ -24,11 +26,22 @@ while ($row = mysqli_fetch_assoc($res)) $packages[] = $row;
             color: #fff;
             
         }
+         .legal-hero-icon {
+            width: 70px; height: 70px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.9rem;
+            margin-bottom: 0px;
+            backdrop-filter: blur(10px);
+        }
         .page-hero h1 {
-            font-size: clamp(1.8rem, 4vw, 2.9rem);
+            font-size: clamp(1.8rem, 4vw, 4.5rem);
             font-weight: 800;
             margin: 0 0 10px;
-            margin-top: 50px;
+            margin-top: 20px;
         }
         .page-hero p {
             font-size: 1.3rem;
@@ -160,6 +173,7 @@ while ($row = mysqli_fetch_assoc($res)) $packages[] = $row;
 <?php include 'includes/header.php'; ?>
 
 <div class="page-hero">
+<div class="legal-hero-icon"  style="margin-top: 25px;" ><i class="fas fa-briefcase-medical"></i></div>
     <h1>Medical Packages</h1>
     <p>Comprehensive health packages tailored for your needs</p>
 </div>

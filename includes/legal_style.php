@@ -1,9 +1,10 @@
+<?php include 'includes/header.php'; ?>
 <style>
 .legal-page { background: #f5f6f8; min-height: 100vh; }
 
 /* Hero */
 .legal-hero {
-    background: linear-gradient(135deg, #00b6bd 0%, #1a3c5e 100%);
+    background: linear-gradient(135deg, #0d2137 0%, #1a3c5e 60%, #00b6bd 100%);
     padding: 80px 8% 60px;
     text-align: center;
     color: #fff;
@@ -20,7 +21,7 @@
     backdrop-filter: blur(10px);
 }
 .legal-hero h1 {
-    font-size: 3.0rem;
+    font-size: 4.5rem;
     font-weight: 800;
     margin-bottom: 10px;
     letter-spacing: -0.5px;

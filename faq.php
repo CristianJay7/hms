@@ -41,7 +41,7 @@ while ($row = mysqli_fetch_assoc($faqs_res)) $faqs[] = $row;
 }
 
 .faq-question h3 {
-    font-size: 1.7rem;
+    font-size: 1.9rem;
     font-weight: 700;
     color: #1a3c5e;
     margin: 0;

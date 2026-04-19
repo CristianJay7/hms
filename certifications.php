@@ -15,6 +15,8 @@ while ($row = mysqli_fetch_assoc($res)) $certs[] = $row;
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <?php include 'includes/favicon.php'; ?>
+    <?php include 'includes/header.php'; ?>
+
     <style>
         /* ── Page Hero ── */
         .page-hero {
@@ -169,7 +171,6 @@ while ($row = mysqli_fetch_assoc($res)) $certs[] = $row;
 </head>
 <body>
 
-<?php include 'includes/header.php'; ?>
 
 <div class="page-hero">
     <h1>Certifications & Permits</h1>

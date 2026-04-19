@@ -16,13 +16,15 @@ while ($row = mysqli_fetch_assoc($jobs_res)) $jobs[] = $row;
 <?php include 'includes/favicon.php'; ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="./css/style.css">
+
 <?php include 'includes/legal_style.php'; ?>
+<?php include 'includes/header.php'; ?>
 <style>
 /* Job listings */
 .jobs-section { margin-top: 40px; }
 
 .jobs-section h2 {
-    font-size: 2.4rem;
+    font-size: 3.0rem;
     font-weight: 800;
     color: #1a3c5e;
     margin-bottom: 8px;
@@ -182,11 +184,11 @@ while ($row = mysqli_fetch_assoc($jobs_res)) $jobs[] = $row;
 </style>
 </head>
 <body>
-<?php include 'includes/header.php'; ?>
+
 
 
 <div class="legal-page">
-    <div class="legal-hero" style="background: linear-gradient(135deg, #0d2b3e 0%, #1a3c5e 100%);">
+    <div class="legal-hero" style="background: linear-gradient(135deg, #0d2137 0%, #1a3c5e 60%, #00b6bd 100%);">
         <div class="legal-hero-icon" style="margin-top: 20px;"><i class="fas fa-briefcase-medical"></i></div>
         <h1><?= info('careers_title', 'Careers') ?></h1>
         <p><?= info('careers_intro') ?></p>

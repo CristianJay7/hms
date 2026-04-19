@@ -167,12 +167,13 @@ Our hospital is dedicated to delivering comprehensive medical care through exper
     <div class="box">
       <h6>Quick Links</h6>
       <ul>
-        <li><a href="aboutus.php">About</a></li>
-        <li><a href="careers.php">Careers</a></li>        
-        <li><a href="org-chart.php">Organizational Chart</a></li>
-        <li><a href="privacy.php">Privacy Notice</a></li>
-        <li><a href="patient-rights.php">Patient Right</a></li>
-        <li><a href="terms.php">Terms and Condition</a></li>
+      <li><a href="/hms/aboutus">About</a></li>
+        <li><a href="/hms/careers">Careers</a></li>        
+        <li><a href="/hms/certifications">Permit and Certifications</a></li>
+        <li><a href="/hms/privacy">Privacy Notice</a></li>
+        <li><a href="/hms/patient-rights">Patient Right</a></li>
+        <li><a href="/hms/terms">Terms and Condition</a></li>
+        <li><a href="/hms/faq">Frequently Ask Questions</a></li>
       </ul>
     </div>
 
@@ -181,12 +182,12 @@ Our hospital is dedicated to delivering comprehensive medical care through exper
       <h6>Services</h6>
       <ul> 
         
-        <li><a href="doctors.php">Find a Doctor</a></li>
-        <li><a href="hmo.php">HMO and Insurances</a></li>
-        <li><a href="#">Medical Packages</a></li>
-        <li><a href="services-details.php?id=6">Rehabilitation</a></li>
-        <li><a href="roomrates.php">Room Rates</a></li>
-        <li><a href="#">Standard Services</a></li>
+      <li><a href="/hms/doctor">Find a Doctor</a></li>
+        <li><a href="/hms/hmo">HMO and Insurances</a></li>
+        <li><a href="/hms/packages">Medical Packages</a></li>
+        <li><a href="/hms/services-details/6">Rehabilitation</a></li>
+        <li><a href="/hms/roomrates">Room Rates</a></li>
+        <li><a href="/hms/services">Standard Services</a></li>
         
         
         

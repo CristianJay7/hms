@@ -57,8 +57,8 @@ Our hospital is dedicated to delivering comprehensive medical care through exper
       <ul> 
         
         <li><a href="/hms/doctor">Find a Doctor</a></li>
-        <li><a href="/hmshmo">HMO and Insurances</a></li>
-        <li><a href="#">Medical Packages</a></li>
+        <li><a href="/hms/hmo">HMO and Insurances</a></li>
+        <li><a href="/hms/packages">Medical Packages</a></li>
         <li><a href="/hms/services-details/6">Rehabilitation</a></li>
         <li><a href="/hms/roomrates">Room Rates</a></li>
         <li><a href="/hms/services">Standard Services</a></li>
