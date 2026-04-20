@@ -150,82 +150,85 @@ if (!in_array($page, $allowed_pages)) {
 
 <div class="wrapper">
 
-    <!-- Sidebar⚕  -->
+    <!-- Sidebar -->
     <div class="sidebar">
-        <div class="sidebar-brand"><i class="fa-solid fa-staff-snake"></i>  Admin</div>
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-staff-snake"></i> ZDH Admin
+        </div>
 
         <nav>
-            <a href="index.php?page=dashboard" <?= $page === 'dashboard' ? 'class="active"' : '' ?>>
+            <!-- General -->
+            <div class="nav-section"style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;">General</div>
+            <a href="index.php?page=dashboard" <?= $page==='dashboard' ? 'class="active"' : '' ?>>
                 <i class="fas fa-chart-bar"></i> Dashboard
             </a>
-
-
-
             <a href="index.php?page=siteinfo" <?= $page==='siteinfo' ? 'class="active"' : '' ?>>
-                <i class="fas fa-cog"></i> Information
-            </a>  
-
-            
-            <a href="index.php?page=users" <?= $page === 'users' ? 'class="active"' : '' ?>>
+                <i class="fas fa-cog"></i> Site Information
+            </a>
+            <a href="index.php?page=users" <?= $page==='users' ? 'class="active"' : '' ?>>
                 <i class="fas fa-user-tie"></i> Users
             </a>
-          
-            <a href="index.php?page=doctors" <?= $page === 'doctors' ? 'class="active"' : '' ?>>
-                <i class="fas fa-user-doctor"></i>Doctors
-            </a>
 
-            <a href="index.php?page=hmo" <?= $page === 'hmo' ? 'class="active"' : '' ?>>
-                 <i class="fas fa-shield-heart"></i> HMOs
-            </a>
+            <div class="nav-divider"></div>
 
-            <a href="index.php?page=services" <?= $page === 'services' ? 'class="active"' : '' ?>>
+            <!-- Hospital -->
+            <div class="nav-section"style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;">Hospital</div>
+            <a href="index.php?page=doctors" <?= $page==='doctors' ? 'class="active"' : '' ?>>
+                <i class="fas fa-user-doctor"></i> Doctors
+            </a>
+            <a href="index.php?page=hmo" <?= $page==='hmo' ? 'class="active"' : '' ?>>
+                <i class="fas fa-shield-heart"></i> HMOs
+            </a>
+            <a href="index.php?page=services" <?= $page==='services' ? 'class="active"' : '' ?>>
                 <i class="fas fa-stethoscope"></i> Services
             </a>
-
-            <a href="index.php?page=facility" <?= $page === 'facility' ? 'class="active"' : '' ?>>
-                 <i class="fas fa-hospital"></i> Facility
-            </a>
-
-            <a href="index.php?page=gallery" <?= $page === 'gallery' ? 'class="active"' : '' ?>>
-                 <i class="fas fa-images"></i> Gallery
-            </a>
-
             <a href="index.php?page=roomrates" <?= $page==='roomrates' ? 'class="active"' : '' ?>>
                 <i class="fas fa-bed"></i> Room Rates
             </a>
+            <a href="index.php?page=packages" <?= $page==='packages' ? 'class="active"' : '' ?>>
+                <i class="fas fa-box-open"></i> Med. Packages
+            </a>
 
+            <div class="nav-divider"></div>
+
+            <!-- Content -->
+            <div class="nav-section" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;">Content</div>
+            <a href="index.php?page=facility" <?= $page==='facility' ? 'class="active"' : '' ?>>
+                <i class="fas fa-hospital"></i> Facility
+            </a>
+            <a href="index.php?page=gallery" <?= $page==='gallery' ? 'class="active"' : '' ?>>
+                <i class="fas fa-images"></i> Gallery
+            </a>
+            <a href="index.php?page=blog" <?= $page==='blog' ? 'class="active"' : '' ?>>
+                <i class="fas fa-newspaper"></i> Blog Posts
+            </a>
             <a href="index.php?page=reviews" <?= $page==='reviews' ? 'class="active"' : '' ?>>
                 <i class="fas fa-star"></i> Reviews
-            </a>    
-
-            <a href="index.php?page=blog" <?= $page==='blog' ? 'class="active"' : '' ?>>
-                <i class="fas fa-newspaper"></i> Blogs
-            </a>    
-
-            <a href="index.php?page=legal"  <?= $page==='legal' ? 'class="active"' : '' ?>>
-                            <i class="fas fa-scale-balanced"></i> Legal Pages
             </a>
-
-
-            <a href="index.php?page=careers" <?= $page==='careers' ? 'class="active"' : '' ?>>
-                <i class="fas fa-briefcase-medical"></i> Careers & Job Posting
-            </a> 
-
             <a href="index.php?page=faq" <?= $page==='faq' ? 'class="active"' : '' ?>>
                 <i class="fas fa-circle-question"></i> FAQ
-            </a> 
-
-            <a href="index.php?page=packages" <?= $page==='packages' ? 'class="active"' : '' ?>>
-                <i class="fas fa-box"></i>Packages
             </a>
+
+            <div class="nav-divider"></div>
+
+            <!-- Compliance -->
+            <div class="nav-section"style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;">Compliance</div>
             <a href="index.php?page=certifications" <?= $page==='certifications' ? 'class="active"' : '' ?>>
                 <i class="fas fa-award"></i> Certifications
             </a>
-
+            <a href="index.php?page=legal" <?= $page==='legal' ? 'class="active"' : '' ?>>
+                <i class="fas fa-scale-balanced"></i> Legal Pages
+            </a>
+            <a href="index.php?page=careers" <?= $page==='careers' ? 'class="active"' : '' ?>>
+                <i class="fas fa-briefcase-medical"></i> Careers
+            </a>
         </nav>
 
         <div class="sidebar-footer">
-        <a href="#" onclick="document.getElementById('logoutModal').style.display='flex'">🚪 Logout</a>        </div>
+            <a href="#" onclick="document.getElementById('logoutModal').style.display='flex'">
+                <i class="fas fa-right-from-bracket"></i> Logout
+            </a>
+        </div>
     </div>
 
     <!-- Main -->
