@@ -145,7 +145,7 @@ a.hcs-item:hover {
             <div class="content">
             <h1><?= $home_tagline ?></h1>
                 <p style="text-transform: none;"><?= $home_subtext ?></p><br>
-                <a href="contact"><button class="button" style="margin-right: 10px; border-radius: 12px;">Keep In Touch.</button></a>
+               <!--<a href="contact"><button class="button" style="margin-right: 10px; border-radius: 12px;">Keep In Touch.</button></a> -->
 
                 <div id="hero-contact-strip">
                 <a class="hcs-item" href="tel:+639272753029">
