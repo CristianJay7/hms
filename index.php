@@ -31,6 +31,89 @@ if (isset($con)) {
     <link rel="stylesheet" href="/hms/css/style.css">
     <style>
 
+/* ── VERSION A: Contact Topbar ── */
+/* (styles are inside topbar-contact.php) */
+
+/* ── VERSION B: Hero Contact Strip ── */
+#hero-contact-strip {
+    display: inline-flex;
+    align-items: stretch;
+    gap: 0;
+    margin-top: 32px;
+    background: rgba(255,255,255,0.10);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 2px solid rgba(255,255,255,0.22);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+
+.hcs-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 22px;
+    text-decoration: none;
+    color: #fff;
+    transition: background 0.2s;
+    cursor: default;
+}
+a.hcs-item { cursor: pointer; }
+a.hcs-item:hover {
+    background: rgba(0,182,189,0.18);
+}
+
+.hcs-icon {
+    width: 36px; height: 36px;
+    background: rgba(0,182,189,0.25);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.5rem;
+    color: #00b6bd;
+    border: 1px solid rgba(0,182,189,0.4);
+}
+
+.hcs-text {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+.hcs-label {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    line-height: 1;
+    margin-bottom: 3px;
+}
+.hcs-value {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.hcs-divider {
+    width: 2px;
+    background: rgba(255,255,255,0.14);
+    flex-shrink: 0;
+}
+
+/* Mobile stacking */
+@media (max-width: 680px) {
+    #hero-contact-strip {
+        flex-direction: column;
+        width: 100%;
+        max-width: 320px;
+    }
+    .hcs-divider {
+        width: 100%; height: 1px;
+    }
+    .hcs-item { padding: 12px 18px; }
+}
 </style>
 </head>
 
@@ -62,7 +145,35 @@ if (isset($con)) {
             <div class="content">
             <h1><?= $home_tagline ?></h1>
                 <p style="text-transform: none;"><?= $home_subtext ?></p><br>
-                <a href="contact"><button class="button">Get In Touch.</button></a>
+                <a href="contact"><button class="button" style="margin-right: 10px; border-radius: 12px;">Keep In Touch.</button></a>
+
+                <div id="hero-contact-strip">
+                <a class="hcs-item" href="tel:+639272753029">
+                    <span class="hcs-icon"><i class="fa-solid fa-phone"></i></span>
+                    <span class="hcs-text">
+                        <span class="hcs-label">Call Us</span>
+                        <span class="hcs-value">+63927-275-3097</span>
+                    </span>
+                </a>
+                <div class="hcs-divider"></div>
+                <a class="hcs-item" href="https://mail.google.com/mail/?view=cm&to=zdh1964@yahoo.com&su=Inquiry&body=Hello, I would like to inquire about..." target="_blank">
+                    <span class="hcs-icon"><i class="fa-solid fa-envelope"></i></span>
+                    <span class="hcs-text">
+                        <span class="hcs-label">Email Us</span>
+                        <span class="hcs-value">zdh1964@yahoo.com</span>
+                    </span>
+                </a>
+                <div class="hcs-divider"></div>
+                <a class="hcs-item" href="#">
+                    <span class="hcs-icon"><i class="fa-solid fa-location-dot"></i></span>
+                    <span class="hcs-text">
+                        <span class="hcs-label">Find Us</span>
+                        <span class="hcs-value">Veteranz Ave., Zamboanga City</span>
+                    </span>
+                </a>
+            </div>
+
+
             </div>
         </div>
     </section>
