@@ -145,6 +145,7 @@ a.hcs-item:hover {
             <div class="content">
             <h1><?= $home_tagline ?></h1>
                 <p style="text-transform: none;"><?= $home_subtext ?></p><br>
+                <!-- uncomment this below to change in to button -->
                <!--<a href="contact"><button class="button" style="margin-right: 10px; border-radius: 12px;">Keep In Touch.</button></a> -->
 
                 <div id="hero-contact-strip">
@@ -184,7 +185,7 @@ a.hcs-item:hover {
 
 <!-- whycoose us section start  -->
 
-<?php include '<includes/why-section.php'; ?>
+<?php include 'includes/why-section.php'; ?>
 
 <!-- whycoose us section end  -->
 
@@ -193,7 +194,7 @@ a.hcs-item:hover {
 
 <!-- about section start  -->
 
-<?php include '<includes/faci.php'; ?>
+<?php include 'includes/faci.php'; ?>
      
 <!-- about section end  -->
 
@@ -201,7 +202,7 @@ a.hcs-item:hover {
 
 <!-- services section start -->
   
-<?php include '<includes/services-section.php'; ?>
+<?php include 'includes/services-section.php'; ?>
 
 <!-- services section end -->
 
@@ -211,7 +212,7 @@ a.hcs-item:hover {
 
 <!-- review services start -->
 
-<?php include '<includes/review.php'; ?>
+<?php include 'includes/review.php'; ?>
    
 <!-- review section end -->
 
@@ -222,7 +223,7 @@ a.hcs-item:hover {
 
 <!-- hmo section start  -->
 
-<?php include '<includes/hmodisplay.php'; ?>
+<?php include 'includes/hmodisplay.php'; ?>
 
 <!-- hmo section end  -->
 

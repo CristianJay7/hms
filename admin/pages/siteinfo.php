@@ -72,6 +72,7 @@ function si($key, $fallback = '') { global $_si; return htmlspecialchars($_si[$k
             <label>Sub Text</label>
             <textarea id="home_subtext" rows="2"><?= si('home_subtext') ?></textarea>
         </div>
+
         <div class="si-field si-full">
     <label>Background Type</label>
     <select id="home_bg_type" style="width:100%;padding:9px 12px;border:1px solid #dde3ea;border-radius:6px;font-size:0.9rem;font-family:inherit;outline:none;background:#fff;">
@@ -81,11 +82,23 @@ function si($key, $fallback = '') { global $_si; return htmlspecialchars($_si[$k
     <small style="color:#aaa;">Choose whether to show an image or video as the home background.</small>
 </div>
 
+<!-- ✅ THIS WAS MISSING -->
+<div class="si-field si-full">
+    <label>Background Image <span style="color:#aaa;font-weight:400;">(JPG, PNG, WEBP)</span></label>
+    <?php if (!empty($_si['home_bg_image'])): ?>
+        <div style="margin-bottom:8px;">
+            <img src="../<?= si('home_bg_image') ?>" style="max-width:200px;border-radius:6px;border:1px solid #dde3ea;">
+        </div>
+    <?php endif; ?>
+    <input type="file" id="home_bg_image_file" accept="image/jpeg,image/png,image/webp">
+    <small style="color:#aaa;">Leave empty to keep current image.</small>
+</div>
+
 <div class="si-field si-full">
     <label>Background Video <span style="color:#aaa;font-weight:400;">(MP4 recommended)</span></label>
     <?php if (!empty($_si['home_bg_video'])): ?>
         <div style="margin-bottom:8px;">
-            <video src="../<?= si('home_bg_video') ?>" style="max-width:200px;border-radius:6px;" controls muted></video>
+        <video src="../<?= si('home_bg_video') ?><?= strpos(si('home_bg_video'), '?') === false ? '?v='.time() : '' ?>" style="max-width:200px;border-radius:6px;" controls muted></video>
         </div>
     <?php endif; ?>
     <input type="file" id="home_bg_video_file" accept="video/mp4,video/webm,video/ogg">
@@ -354,7 +367,7 @@ function saveSiteInfo() {
     const videoFile = document.getElementById('home_bg_video_file');
     if (videoFile && videoFile.files[0]) fd.append('home_bg_video_file', videoFile.files[0]);
 
-    fetch('siteinfo-ajax.php', { method: 'POST', body: fd })
+    fetch('http://localhost:8080/hms/admin/siteinfo-ajax.php', { method: 'POST', body: fd })
         .then(r => r.text())
         .then(text => {
             console.log('Raw response:', text);

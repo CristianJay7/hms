@@ -36,14 +36,14 @@ if (!empty($_FILES['home_bg_image_file']['name'])) {
         'image/jpeg',
         'image/png',
         'image/webp',
-        'image/jpg'
     ];
     $file    = $_FILES['home_bg_image_file'];
 
     if (in_array(strtolower($file['type']), $allowed)) {
         $ext  = pathinfo($file['name'], PATHINFO_EXTENSION);
         $dest = 'admin/images/home/home_bg.' . $ext;
-
+        $dir  = '../admin/images/home/';
+        if (!is_dir($dir)) mkdir($dir, 0755, true);
         if (move_uploaded_file($file['tmp_name'], '../' . $dest)) {
             $v   = mysqli_real_escape_string($con, $dest);
             $sql = "INSERT INTO siteinfo (key_name, value) VALUES ('home_bg_image','$v')
@@ -66,8 +66,10 @@ if (!empty($_FILES['home_bg_video_file']['name'])) {
     if (in_array(strtolower($file['type']), $allowed_vid)) {
         $ext  = pathinfo($file['name'], PATHINFO_EXTENSION);
         $dest = 'admin/images/home/home_bg_video.' . $ext;
+        $dir  = '../admin/images/home/';
+        if (!is_dir($dir)) mkdir($dir, 0755, true);
         if (move_uploaded_file($file['tmp_name'], '../' . $dest)) {
-            $v   = mysqli_real_escape_string($con, $dest);
+            $v   = mysqli_real_escape_string($con, $dest . '?v=' . time());
             $sql = "INSERT INTO siteinfo (key_name, value) VALUES ('home_bg_video','$v')
                     ON DUPLICATE KEY UPDATE value='$v'";
             if (!mysqli_query($con, $sql)) $errors++;

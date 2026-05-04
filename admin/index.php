@@ -45,7 +45,7 @@ if (!in_array($page, $allowed_pages)) {
     color: var(--blue);
     font-size: 1.3rem;
     font-weight: 700;
-    margin-bottom: 36px;
+    margin-bottom: 15px;
     padding-left: 4px;
     letter-spacing: 0.5px;
 }
