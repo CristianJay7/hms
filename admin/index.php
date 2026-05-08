@@ -39,6 +39,7 @@ if (!in_array($page, $allowed_pages)) {
     padding: 30px 20px;
     display: flex;
     flex-direction: column;
+    overflow: auto;
 }
 
 .sidebar-brand {
