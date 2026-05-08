@@ -286,13 +286,42 @@ function si($key, $fallback = '') { global $_si; return htmlspecialchars($_si[$k
         </div>
         <div class="si-field si-full">
             <label>Org Chart Image <span style="color:#aaa;font-weight:400;">(upload to replace the default tree)</span></label>
-            <?php if (!empty($_si['org_chart_image'])): ?>
-                <div style="margin-bottom:8px;">
-                    <img src="<?= si('org_chart_image') ?>" style="max-width:200px;border-radius:6px;border:1px solid #dde3ea;">
+
+            <?php
+            // Fresh direct query — don't rely on $_si which may be stale
+            $org_check = mysqli_query($con, "SELECT value FROM siteinfo WHERE key_name='org_chart_image' LIMIT 1");
+            $org_row   = mysqli_fetch_assoc($org_check);
+            $org_val   = $org_row['value'] ?? '';
+            ?>
+
+            <?php if (!empty($org_val)): ?>
+                <!-- Currently has a custom image -->
+                <div id="orgCurrentWrap" style="margin-bottom:10px;">
+                    <img src="../<?= htmlspecialchars($org_val) ?>"
+                         style="max-width:220px;border-radius:8px;border:1px solid #dde3ea;display:block;margin-bottom:8px;"
+                         onerror="this.onerror=null;this.style.opacity='0.3'">
+                    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                        <span style="font-size:0.78rem;color:#1a7a4a;font-weight:600;">
+                            ✅ Custom image is active
+                        </span>
+                        <button type="button" onclick="resetOrgChart()"
+                            style="padding:6px 14px;background:#fff0f0;color:#cc2233;
+                                   border:1px solid #f8c8cc;border-radius:6px;
+                                   font-size:0.78rem;font-weight:600;cursor:pointer;">
+                            🔄 Remove &amp; Restore Default Tree
+                        </button>
+                    </div>
                 </div>
+                <input type="file" id="org_chart_image_file" accept="image/jpeg,image/png,image/webp">
+                <small style="color:#aaa;">Upload a new image to replace the current one.</small>
+            <?php else: ?>
+                <!-- No custom image — default tree is showing -->
+                <div style="margin-bottom:8px;padding:10px 14px;background:#f0f7ff;border-radius:6px;font-size:0.82rem;color:#1a6fcc;font-weight:500;">
+                    ℹ️ Currently showing the <strong>default org chart tree</strong>. Upload an image to replace it.
+                </div>
+                <input type="file" id="org_chart_image_file" accept="image/jpeg,image/png,image/webp">
+                <small style="color:#aaa;">Upload a photo/scan of your org chart.</small>
             <?php endif; ?>
-            <input type="file" id="org_chart_image_file" accept="image/jpeg,image/png,image/webp">
-            <small style="color:#aaa;">Upload a photo/scan of your org chart. Leave empty to use the default layout.</small>
         </div>
     </div>
 </div>
@@ -315,7 +344,7 @@ function si($key, $fallback = '') { global $_si; return htmlspecialchars($_si[$k
     💾 Save All Changes
 </button>
 
-<script>// showToast FIRST
+<script>
 function showToast(msg, success) {
     const t = document.getElementById('toast');
     t.textContent      = (success ? '✅ ' : '❌ ') + msg;
@@ -327,23 +356,38 @@ function showToast(msg, success) {
     setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.style.display='none',300); }, 3000);
 }
 
+function resetOrgChart() {
+    if (!confirm('Remove the custom org chart image and restore the default tree? This cannot be undone.')) return;
+    const fd = new FormData();
+    fd.append('action', 'reset_org_chart');
+    fetch('siteinfo-ajax.php', { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(res => {
+            showToast(res.message, res.success);
+            if (res.success) {
+                const wrap = document.getElementById('orgCurrentWrap');
+                if (wrap) wrap.style.display = 'none';
+                setTimeout(() => location.reload(), 1200);
+            }
+        })
+        .catch(() => showToast('Something went wrong.', false));
+}
+
 function saveSiteInfo() {
     const fields = [
         'home_tagline','home_subtext',
         'contact_address','contact_phone','contact_email','contact_telephone',
-        'social_facebook','whyus_badge_num','whyus_heading','whyus_desc','about_para1','about_para2',
-'about_bullet1','about_bullet2','about_bullet3','about_bullet4',
-'about_vision','about_mission', 'privacy_intro','privacy_collection','privacy_use','privacy_rights','privacy_contact','privacy_updated',
-'terms_intro','terms_services','terms_liability','terms_payment','terms_updated',
-'rights_intro','rights_r1_title','rights_r1_desc','rights_r2_title','rights_r2_desc',
-'rights_r3_title','rights_r3_desc','rights_r4_title','rights_r4_desc','rights_r5_title','rights_r5_desc','rights_resp_intro',
-'careers_intro','careers_why_title','careers_why_desc','careers_email','careers_note',
-'org_intro','home_bg_type'
+        'social_facebook','whyus_badge_num','whyus_heading','whyus_desc',
+        'about_para1','about_para2',
+        'about_bullet1','about_bullet2','about_bullet3','about_bullet4',
+        'about_vision','about_mission',
+        'privacy_intro','privacy_collection','privacy_use','privacy_rights','privacy_contact','privacy_updated',
+        'terms_intro','terms_services','terms_liability','terms_payment','terms_updated',
+        'rights_intro','rights_r1_title','rights_r1_desc','rights_r2_title','rights_r2_desc',
+        'rights_r3_title','rights_r3_desc','rights_r4_title','rights_r4_desc','rights_r5_title','rights_r5_desc','rights_resp_intro',
+        'careers_intro','careers_why_title','careers_why_desc','careers_email','careers_note',
+        'org_intro','home_bg_type'
     ];
-
-
-   
-
 
     const fd = new FormData();
     fields.forEach(f => {
@@ -351,12 +395,11 @@ function saveSiteInfo() {
         if (el) fd.append(f, el.value);
     });
 
-    const orgFile = document.getElementById('org_chart_image_file');
-    if (orgFile && orgFile.files[0]) fd.append('org_chart_image_file', orgFile.files[0]);
+    const orgFile   = document.getElementById('org_chart_image_file');
+    if (orgFile   && orgFile.files[0])   fd.append('org_chart_image_file', orgFile.files[0]);
 
-
-    const bgFile = document.getElementById('home_bg_image_file');
-    if (bgFile && bgFile.files[0]) fd.append('home_bg_image_file', bgFile.files[0]);
+    const bgFile    = document.getElementById('home_bg_image_file');
+    if (bgFile    && bgFile.files[0])    fd.append('home_bg_image_file', bgFile.files[0]);
 
     const whyusFile = document.getElementById('whyus_image_file');
     if (whyusFile && whyusFile.files[0]) fd.append('whyus_image_file', whyusFile.files[0]);
@@ -367,13 +410,12 @@ function saveSiteInfo() {
     const videoFile = document.getElementById('home_bg_video_file');
     if (videoFile && videoFile.files[0]) fd.append('home_bg_video_file', videoFile.files[0]);
 
-    fetch('http://localhost:8080/hms/admin/siteinfo-ajax.php', { method: 'POST', body: fd })
+    fetch('siteinfo-ajax.php', { method: 'POST', body: fd })
         .then(r => r.text())
         .then(text => {
-            console.log('Raw response:', text);
             const res = JSON.parse(text);
             showToast(res.message, res.success);
         })
-        .catch(err => showToast('Something went wrong.', false));
+        .catch(() => showToast('Something went wrong.', false));
 }
 </script>

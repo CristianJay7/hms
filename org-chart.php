@@ -21,7 +21,7 @@ include 'includes/info.php';
 <div class="legal-page">
     <div class="legal-hero" >
         <div class="legal-hero-icon" style="margin-top: 20px;"><i class="fas fa-sitemap"></i></div>
-        <h1><?= info('org_title', 'Organizational Chart') ?></h1>
+        <h1>Organizational Structure</h1>
         <p><?= info('org_intro') ?></p>
     </div>
 
@@ -33,11 +33,50 @@ include 'includes/info.php';
 
         <?php if (!empty($org_image)): ?>
         <!-- Show uploaded org chart image -->
-        <div style="text-align:center;margin-bottom:40px;">
+        <div style="display:flex;justify-content:center;align-items:center;margin-bottom:40px;">
             <img src="<?= htmlspecialchars($org_image) ?>"
                  alt="Organizational Chart"
-                 style="max-width:100%;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+                 id="orgChartImg"
+                 onclick="openOrgLightbox()"
+                 style="max-width:100%;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.1);
+                         cursor:zoom-in;transition:transform 0.2s,box-shadow 0.2s;"
+                 onmouseover="this.style.transform='scale(1.01)';this.style.boxShadow='0 16px 56px rgba(0,0,0,0.18)'"
+                 onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 10px 40px rgba(0,0,0,0.1)'">
         </div>
+
+        <!-- Lightbox -->
+        <div id="orgLightbox" onclick="closeOrgLightbox()"
+            style="display:none;position:fixed;inset:0;z-index:9999;
+                   background:rgba(0,0,0,0.92);backdrop-filter:blur(8px);
+                   -webkit-backdrop-filter:blur(8px);
+                   align-items:center;justify-content:center;cursor:zoom-out;">
+            <img src="<?= htmlspecialchars($org_image) ?>"
+                 alt="Organizational Chart"
+                 style="max-width:94vw;max-height:92vh;border-radius:12px;
+                        box-shadow:0 8px 48px rgba(0,0,0,0.6);
+                        object-fit:contain;">
+            <span style="position:absolute;top:18px;right:26px;color:#fff;
+                         font-size:2rem;font-weight:300;cursor:pointer;
+                         line-height:1;opacity:0.7;transition:opacity 0.2s;"
+                  onmouseover="this.style.opacity='1'"
+                  onmouseout="this.style.opacity='0.7'"
+                  onclick="closeOrgLightbox()">✕</span>
+        </div>
+
+        <script>
+        function openOrgLightbox() {
+            const lb = document.getElementById('orgLightbox');
+            lb.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        function closeOrgLightbox() {
+            document.getElementById('orgLightbox').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeOrgLightbox();
+        });
+        </script>
         <?php else: ?>
         <!-- Org Chart Tree -->
         <div class="org-tree">

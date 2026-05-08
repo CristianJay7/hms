@@ -2,6 +2,33 @@
 require_once 'includes/config.php';
 header('Content-Type: application/json');
 
+// ── Handle reset org chart (must run before anything else) ──
+if (($_POST['action'] ?? '') === 'reset_org_chart') {
+    // Fetch current path from DB
+    $res = mysqli_query($con, "SELECT value FROM siteinfo WHERE key_name='org_chart_image'");
+    $row = mysqli_fetch_assoc($res);
+
+    // Delete the file from disk
+    if (!empty($row['value'])) {
+        // Path stored as e.g. "images/org_chart.jpg" relative to website-1/
+        $abs = $_SERVER['DOCUMENT_ROOT'] . '/hms/' . $row['value'];
+        if (file_exists($abs)) unlink($abs);
+
+        // Also try relative path from admin folder
+        $rel = '../' . $row['value'];
+        if (file_exists($rel)) unlink($rel);
+    }
+
+    // Clear the DB value
+    mysqli_query($con, "DELETE FROM siteinfo WHERE key_name='org_chart_image'");
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'Org chart reset to default tree successfully!'
+    ]);
+    exit;
+}
+
 $allowed_keys = [
     'home_tagline','home_subtext','home_btn_text','home_btn_link',
     'home_bg_image',
