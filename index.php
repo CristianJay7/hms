@@ -241,7 +241,7 @@ while ($row = mysqli_fetch_assoc($blogs_res)) $blogs_pub[] = $row;
     <h1 class="heading">News & Updates</h1>
     <h3 class="title">Stay up-to-date with wellness advice, special offers, and local events crafted for you.</h3>
 
-    <div class="box-container">
+    <div class="box-container" style="border-radius: 20px;">
         <?php if (empty($blogs_pub)): ?>
             <p style="text-align:center;color:#aaa;width:100%;">No posts yet.</p>
         <?php else: ?>
