@@ -281,7 +281,7 @@ body {
       </div>
       <h1><?= htmlspecialchars($blog['title']) ?></h1>
       <p style="text-align: justify; hyphens: auto; text-transform: none; white-space: pre-line;"><?= htmlspecialchars($blog['content'] ?: $blog['excerpt']) ?></p>
-      <a href="/hms/blog" class="back-btn">← Back to News & Updates</a> 
+      <a href="/hms/blog" class="back-btn">← Back</a> 
        <?php if (!empty($photos)): ?>
 <div class="blog-gallery">
     <h3 class="gallery-heading">Photo Gallery</h3>
